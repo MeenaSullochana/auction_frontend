@@ -101,7 +101,7 @@ export function ProductBid() {
   const load = () => api(`/user/products/${auctionId}/${id}`, { auth: "user" }).then(setData);
   useEffect(() => { load().catch((e) => setErr(e.message)); }, [auctionId, id]);
   useEffect(() => {
-    const socket = io();
+    const socket = io(import.meta.env.VITE_API_URL || undefined);
     socket.on("new-trade", () => load());
     socket.on("auction-time", () => load());
     return () => socket.close();

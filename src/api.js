@@ -1,4 +1,5 @@
-const API = "/api";
+const API = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "") + "/api";
+const UPLOADS = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
 
 function token(role) {
   return localStorage.getItem(role === "admin" ? "admin_token" : "user_token");
@@ -25,5 +26,5 @@ export async function api(path, { method = "GET", body, auth, isForm } = {}) {
 }
 
 export function fileUrl(name) {
-  return name ? `/uploads/${name}` : "";
+  return name ? `${UPLOADS}/uploads/${name}` : "";
 }
