@@ -1,5 +1,12 @@
-const API_BASE = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "") + "/api";
-const UPLOADS = (import.meta.env.VITE_API_URL || "").replace(/\/$/, "");
+const PROD_API = "https://auction-backend-9bgs.onrender.com";
+const apiOrigin = (
+  import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD && typeof window !== "undefined" && window.location.hostname.includes("netlify.app")
+    ? PROD_API
+    : "")
+).replace(/\/$/, "");
+const API_BASE = `${apiOrigin}/api`;
+const UPLOADS = apiOrigin;
 
 export { API_BASE };
 
