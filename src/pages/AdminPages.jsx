@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { api } from "../api";
+import { api, API_BASE } from "../api";
 import { applyTheme, DEFAULT_SITE, useSite } from "../site";
 
 function fmt(d) {
@@ -228,7 +228,7 @@ export function Auctions() {
 }
 
 async function download(path, filename) {
-  const res = await fetch(`/api${path}`, { headers: { Authorization: `Bearer ${localStorage.getItem("admin_token")}` } });
+  const res = await fetch(`${API_BASE}${path}`, { headers: { Authorization: `Bearer ${localStorage.getItem("admin_token")}` } });
   const blob = await res.blob();
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
