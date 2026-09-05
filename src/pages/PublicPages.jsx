@@ -319,14 +319,14 @@ export function Contact() {
       </div>
       <section className="section">
         <Reveal className="container contact-grid">
-          <div className="contact-intro">
-            <h2>Vendor enquiry</h2>
-            <p className="lead">
-              Submit enrolment details below. We share documents, terms &amp; registration fee by email, then complete vendor setup with a unique ID in admin.
-            </p>
-          </div>
+          <div className="contact-intro-stack">
+            <div className="contact-intro">
+              <h2>Vendor enquiry</h2>
+              <p className="lead">
+                Submit enrolment details below. We share documents, terms &amp; registration fee by email, then complete vendor setup with a unique ID in admin.
+              </p>
+            </div>
 
-          <div className="contact-enquiry-stack">
             <aside className="contact-side-card">
               <h3>Chennai desk</h3>
               <a className="contact-side-row" href="tel:+919841281212">
@@ -357,40 +357,40 @@ export function Contact() {
                 </span>
               </div>
             </aside>
-
-            <form
-              className="card glass-form"
-              onSubmit={async (e) => {
-                e.preventDefault();
-                setMsg("");
-                setErr("");
-                try {
-                  const data = await api("/public/contact", { method: "POST", body: form });
-                  setMsg(data.message);
-                  setForm(profileToEnquiry(user));
-                } catch (ex) {
-                  setErr(ex.message || "Could not send enquiry");
-                }
-              }}
-            >
-              {user && (
-                <p className="lead" style={{ marginBottom: 12 }}>
-                  Signed in as <strong>{user.username}</strong> — firm and contact fields are filled from your vendor profile.
-                </p>
-              )}
-              {msg && <div className="alert ok">{msg}</div>}
-              {err && <div className="alert err">{err}</div>}
-              <div className="form-grid">
-                <div className="field"><label>Firm Name</label><input name="firm_name" required value={form.firm_name} onChange={onChange} /></div>
-                <div className="field"><label>Contact Person</label><input name="contact_person" required value={form.contact_person} onChange={onChange} /></div>
-                <div className="field full"><label>Address</label><input name="address" required value={form.address} onChange={onChange} /></div>
-                <div className="field"><label>Contact No</label><input name="contact_no" required value={form.contact_no} onChange={onChange} /></div>
-                <div className="field"><label>Email</label><input name="email" type="email" required value={form.email} onChange={onChange} /></div>
-                <div className="field full"><label>Message (optional)</label><textarea name="message" rows="4" value={form.message} onChange={onChange} /></div>
-              </div>
-              <button className="btn btn-gold" style={{ marginTop: 16 }}>Send enquiry</button>
-            </form>
           </div>
+
+          <form
+            className="card glass-form"
+            onSubmit={async (e) => {
+              e.preventDefault();
+              setMsg("");
+              setErr("");
+              try {
+                const data = await api("/public/contact", { method: "POST", body: form });
+                setMsg(data.message);
+                setForm(profileToEnquiry(user));
+              } catch (ex) {
+                setErr(ex.message || "Could not send enquiry");
+              }
+            }}
+          >
+            {user && (
+              <p className="lead" style={{ marginBottom: 12 }}>
+                Signed in as <strong>{user.username}</strong> — firm and contact fields are filled from your vendor profile.
+              </p>
+            )}
+            {msg && <div className="alert ok">{msg}</div>}
+            {err && <div className="alert err">{err}</div>}
+            <div className="form-grid">
+              <div className="field"><label>Firm Name</label><input name="firm_name" required value={form.firm_name} onChange={onChange} /></div>
+              <div className="field"><label>Contact Person</label><input name="contact_person" required value={form.contact_person} onChange={onChange} /></div>
+              <div className="field full"><label>Address</label><input name="address" required value={form.address} onChange={onChange} /></div>
+              <div className="field"><label>Contact No</label><input name="contact_no" required value={form.contact_no} onChange={onChange} /></div>
+              <div className="field"><label>Email</label><input name="email" type="email" required value={form.email} onChange={onChange} /></div>
+              <div className="field full"><label>Message (optional)</label><textarea name="message" rows="4" value={form.message} onChange={onChange} /></div>
+            </div>
+            <button className="btn btn-gold" style={{ marginTop: 16 }}>Send enquiry</button>
+          </form>
         </Reveal>
       </section>
     </div>
