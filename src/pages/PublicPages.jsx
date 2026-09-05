@@ -10,8 +10,8 @@ const SERVICE_PAGES = {
   "e-waste": {
     chip: "Service",
     title: "E-waste",
-    hero: "/media/slide-hardware.jpg",
-    photo: "/media/slide-mobile.jpg",
+    hero: "/media/online-showcase-ewaste.jpg",
+    photo: "/media/online-ewaste-detail.jpg",
     headline: "Clear e-waste the right way.",
     lead:
       "Auction House helps companies manage and clear their e-waste in a proper and responsible manner. It supports the safe collection, segregation, recycling, and disposal of electronic waste through appropriate channels.",
@@ -99,9 +99,13 @@ const AUCTION_TYPE_PAGES = {
 
 function DetailPage({ page }) {
   if (!page) return <Navigate to="/" replace />;
+  const fallbackPhoto = "/media/hero-floor.jpg";
   return (
     <div className="topic-page">
-      <div className="page-hero with-photo topic-hero" style={{ backgroundImage: `url(${page.hero})` }}>
+      <div
+        className="page-hero with-photo topic-hero"
+        style={{ backgroundImage: `url(${page.hero}), url(${fallbackPhoto})` }}
+      >
         <div className="container topic-hero-copy">
           <p className="chip chip-on-dark">{page.chip}</p>
           <h1>{page.title}</h1>
@@ -110,7 +114,15 @@ function DetailPage({ page }) {
       </div>
       <section className="section">
         <Reveal className="container split detail-split">
-          <img className="round-photo detail-photo" src={page.photo} alt="" />
+          <img
+            className="round-photo detail-photo"
+            src={page.photo}
+            alt=""
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = fallbackPhoto;
+            }}
+          />
           <div>
             <h2>{page.headline}</h2>
             {page.body && <p className="lead">{page.body}</p>}
@@ -164,8 +176,8 @@ export function Home() {
             <Link className="btn btn-gold" to="/about">Read our story</Link>
           </div>
           <div className="photo-stack">
-            <img src="/media/slide-hardware.jpg" alt="Hardware and electronics lots" />
-            <img src="/media/hero-yard.jpg" alt="Yard liquidation" />
+            <img src="/media/online-home-why1.jpg" alt="Industrial plant floor" />
+            <img src="/media/online-home-why2.jpg" alt="Workshop and machinery" />
           </div>
         </Reveal>
       </section>

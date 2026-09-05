@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 /**
  * Home showcase — short copy from your category briefs.
- * Local related photos only (no empty remote URLs, no collage mockups).
+ * Online stock photos (not the collage mockups you uploaded).
  */
 export const SHOWCASE_SLIDES = [
   {
@@ -19,7 +19,7 @@ export const SHOWCASE_SLIDES = [
     label: "E-waste",
     title: "Clear e-waste the right way",
     text: "Safe collection, recycling and EPR support — value recovered, compliance kept.",
-    image: "/media/slide-hardware.jpg",
+    image: "/media/online-showcase-ewaste.jpg",
     cta: { label: "E-waste", to: "/services/e-waste" },
   },
   {
@@ -27,7 +27,7 @@ export const SHOWCASE_SLIDES = [
     label: "Liquidation",
     title: "Idle stock → working capital",
     text: "Excess and end-of-life inventory cleared through a transparent auction desk.",
-    image: "/media/hero-yard.jpg",
+    image: "/media/online-home-why1.jpg",
     cta: { label: "Liquidation", to: "/services/liquidation" },
   },
   {
@@ -35,7 +35,7 @@ export const SHOWCASE_SLIDES = [
     label: "Mobile",
     title: "Mobile phones in bulk",
     text: "Handsets and parts — PCBs, screens, cameras, batteries — sold with a recorded close.",
-    image: "/media/slide-mobile.jpg",
+    image: "/media/online-showcase-mobile.jpg",
     cta: { label: "Mobile lots", to: "/auction" },
   },
   {
@@ -43,7 +43,7 @@ export const SHOWCASE_SLIDES = [
     label: "Consumer Electronics",
     title: "Consumer electronics",
     text: "TVs, laptops, printers and routers — excess cleared cleanly for principals.",
-    image: "/media/slide-consumer.jpg",
+    image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1800&q=80",
     cta: { label: "Electronics", to: "/auction" },
   },
   {
@@ -51,7 +51,7 @@ export const SHOWCASE_SLIDES = [
     label: "Home Appliances",
     title: "Home appliances",
     text: "Washers, fridges, ACs and parts — bulk lots with a simple, fair clock.",
-    image: "/media/slide-home.jpg",
+    image: "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1800&q=80",
     cta: { label: "Home Appliances", to: "/auction" },
   },
   {
@@ -59,7 +59,7 @@ export const SHOWCASE_SLIDES = [
     label: "Kitchen Appliances",
     title: "Kitchen & small appliances",
     text: "Mixers, kettles, microwaves and more — surplus moved in organised sales.",
-    image: "/media/slide-home.jpg",
+    image: "https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1800&q=80",
     cta: { label: "Kitchen lots", to: "/auction" },
   },
   {
@@ -67,7 +67,7 @@ export const SHOWCASE_SLIDES = [
     label: "Hardware & Electrical",
     title: "Hardware & electrical",
     text: "Cables, switches, lighting and tools — idle stores returned to market.",
-    image: "/media/slide-hardware.jpg",
+    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1800&q=80",
     cta: { label: "Hardware lots", to: "/auction" },
   },
   {
@@ -75,7 +75,7 @@ export const SHOWCASE_SLIDES = [
     label: "Auto Mobile",
     title: "Autos & spare parts",
     text: "Vehicles and components — fleets and workshops cleared at fair market value.",
-    image: "/media/slide-auto.jpg",
+    image: "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1800&q=80",
     cta: { label: "Auto Mobile", to: "/services/liquidation" },
   },
   {
@@ -83,7 +83,7 @@ export const SHOWCASE_SLIDES = [
     label: "Others",
     title: "Other industrial lots",
     text: "Scrap, unused stores, unclaimed cargo and mixed surplus — cleared on the same fair clock.",
-    image: "/media/slide-scrap.jpg",
+    image: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?auto=format&fit=crop&w=1800&q=80",
     cta: { label: "See live lots", to: "/auction" },
   },
 ];
