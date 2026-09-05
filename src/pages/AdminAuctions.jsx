@@ -513,6 +513,7 @@ export function Auctions() {
                 <div><span>Status</span><b>{viewAuction.status ? "Active" : "Pending"}</b></div>
               </div>
               <div className="action-row">
+                <Link className="btn btn-primary-soft" to={`/admin/auction/${viewAuction.id}/live-room`}>Live bidding room</Link>
                 <button type="button" className="btn soft-toggle" onClick={() => openListAction(viewAuction, "product")}>+ Add Product</button>
                 <Link className="btn soft-toggle" to={`/admin/products/AuctionWise?auction_id=${viewAuction.id}`}>Open auction page</Link>
               </div>
@@ -618,6 +619,7 @@ export function Auctions() {
                   <td>{fmt(a.expired_at)}</td>
                   <td><span className={`status-pill ${(a.phase || "").toLowerCase()}`}>{a.phase || (a.status ? "Active" : "Pending")}</span></td>
                   <td className="row-actions">
+                    <Link className="text-btn" to={`/admin/auction/${a.id}/live-room`}>Live room</Link>
                     <Link className="text-btn" to={`/admin/products/AuctionWise?auction_id=${a.id}`}>Products</Link>
                     <button type="button" className="text-btn" onClick={() => openListAction(a, "product")}>Quick add</button>
                     <button type="button" className="text-btn" onClick={() => openListAction(a, "import")}>Import</button>
@@ -761,3 +763,174 @@ export function Reports() {
     </div>
   );
 }
+
+function fmtTimeShort(d) {
+  if (!d) return "—";
+  return new Date(String(d).replace(" ", "T")).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
+
+function fmtDateShort(d) {
+  if (!d) return "—";
+  return new Date(String(d).replace(" ", "T")).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function HCell({ cell }) {
+  if (!cell?.value && cell?.value !== 0) {
+    return <div className="live-cell muted">—</div>;
+  }
+  return (
+    <div className="live-cell">
+      <strong>₹ {cell.value}</strong>
+      {cell.username && <small>{cell.username}</small>}
+    </div>
+  );
+}
+
+/** Admin Live Bidding Room — matches floor wireframe. */
+export function AdminLiveRoom() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [data, setData] = useState(null);
+  const [err, setErr] = useState("");
+  const [note, setNote] = useState("");
+
+  const load = () =>
+    api(`/admin/auction/${id}/live-room`, { auth: "admin" })
+      .then(setData)
+      .catch((e) => setErr(e.message || "Failed to load room"));
+
+  useEffect(() => { load(); }, [id]);
+
+  useEffect(() => {
+    let socket;
+    let closed = false;
+    import("socket.io-client").then(({ io }) => {
+      if (closed) return;
+      socket = io(import.meta.env.VITE_API_URL || undefined);
+      const refresh = () => load();
+      socket.on("new-trade", refresh);
+      socket.on("auction-time", refresh);
+    });
+    return () => {
+      closed = true;
+      socket?.close();
+    };
+  }, [id]);
+
+  const markSold = async (productId) => {
+    setNote("");
+    try {
+      const d = await api(`/admin/auction/${id}/products/${productId}/mark-sold`, {
+        method: "POST",
+        auth: "admin",
+      });
+      setNote(d.message || "Marked sold");
+      await load();
+    } catch (e) {
+      setNote(e.message);
+    }
+  };
+
+  if (err && !data) return <div className="alert err">{err}</div>;
+  if (!data) return <p>Loading live room…</p>;
+
+  const a = data.auction;
+
+  return (
+    <div className="admin-page live-room-page">
+      <div className="live-room-banner">
+        <strong>Auction House</strong>
+        <span>Live Bidding Room</span>
+      </div>
+
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">{a.phase || "Auction"}</p>
+          <h2>{a.name}</h2>
+        </div>
+        <div className="action-row">
+          <button type="button" className="btn soft-toggle" onClick={() => load()}>Refresh</button>
+          <button type="button" className="btn soft-toggle" onClick={() => navigate(-1)}>Back</button>
+        </div>
+      </div>
+
+      {note && <div className={`alert ${/sold|success/i.test(note) ? "ok" : "err"}`}>{note}</div>}
+
+      <div className="live-meta">
+        <div className="live-meta-col">
+          <div><span>Auction Category</span><b>{a.auction_category || "—"}</b></div>
+          <div><span>Auction Type</span><b>{a.auction_type || "—"}</b></div>
+          <div><span>Division</span><b>{a.division || "—"}</b></div>
+          <div><span>Type</span><b>{a.item_type || "—"}</b></div>
+          <div><span>Inv Type</span><b>{a.inv_type || "—"}</b></div>
+          <div><span>Price</span><b>{a.gst_mode === "inclusive" ? "Inc Tax" : "Exc Tax"}</b></div>
+        </div>
+        <div className="live-meta-col">
+          <div><span>Date</span><b>{fmtDateShort(a.started_at)} — {fmtTimeShort(a.started_at)}</b></div>
+          <div><span>Auction No</span><b>{a.unique_id || `AU-${a.id}`}</b></div>
+          <div><span>Company</span><b>{a.firm || "—"}</b></div>
+          <div><span>Start Time</span><b>{fmtTimeShort(a.started_at)}</b></div>
+          <div><span>End Time</span><b>{fmtTimeShort(a.expired_at)}</b></div>
+          <div><span>No Of Bidders</span><b>{a.bidder_ratio || "0 / 0"}</b></div>
+        </div>
+      </div>
+
+      <div className="live-board panel">
+        <div className="live-board-head">
+          <h3>Auction items</h3>
+          <p>{data.items.length} lot(s) · live H1 / H2 / H3</p>
+        </div>
+
+        <div className="live-board-cols">
+          <span>Auction Items</span>
+          <span>Price / Lot</span>
+          <span>H1</span>
+          <span>H2</span>
+          <span>H3</span>
+          <span>Status</span>
+        </div>
+
+        {data.items.map((item, i) => (
+          <div key={item.id} className={`live-board-row ${item.sold ? "is-sold" : ""}`}>
+            <div className="live-item-pair">
+              <div className="live-cell">
+                <strong>{item.name || `Item ${i + 1}`}</strong>
+                <small>{item.code || "—"}</small>
+              </div>
+              <div className="live-cell">
+                <span>Qty</span>
+                <strong>{item.quantity ?? "—"}</strong>
+              </div>
+            </div>
+            <div className="live-cell">
+              <span>Price per Qty / Lot</span>
+              <strong>₹ {item.price_label}</strong>
+              <small>Start ₹{item.price} · +{item.min_bid_amount}</small>
+            </div>
+            <HCell cell={item.h1} />
+            <HCell cell={item.h2} />
+            <HCell cell={item.h3} />
+            <div className="live-status-col">
+              <div className={`live-cell status ${item.sold ? "sold" : "unsold"}`}>
+                {item.status_label}
+              </div>
+              {!item.sold && item.h1?.value != null && (
+                <button type="button" className="text-btn" onClick={() => markSold(item.id)}>
+                  Mark sold
+                </button>
+              )}
+              <Link className="text-btn" to={`/admin/products/${item.id}/bids`}>Bids</Link>
+            </div>
+          </div>
+        ))}
+
+        {!data.items.length && <p className="empty-note">No products in this auction yet.</p>}
+      </div>
+    </div>
+  );
+}
+

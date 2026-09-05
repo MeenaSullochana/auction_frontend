@@ -7,7 +7,7 @@ import { About, AuctionPage, AuctionTypeDetail, Contact, Disposal, Home, Procure
 import { AdminLogin, ForgotPassword, Login } from "./pages/AuthPages";
 import { AuctionProducts, BidderRoom, ChangePassword, MultipleBid, ProductBid, UserDashboard, WatchList, WinningHistory } from "./pages/UserPages";
 import { AdminDash, BrandSettings, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
-import { Auctions, Reports } from "./pages/AdminAuctions";
+import { Auctions, AdminLiveRoom, Reports } from "./pages/AdminAuctions";
 import { Companies, CompanyDetail, Sliders, VendorCreate, VendorDetail, Vendors } from "./pages/AdminPartners";
 
 function UserGate({ children }) {
@@ -58,6 +58,7 @@ export default function App() {
         <Route path="brand" element={<BrandSettings />} />
         <Route path="sliders" element={<Sliders />} />
         <Route path="auctions/:type" element={<Auctions />} />
+        <Route path="auction/:id/live-room" element={<AdminLiveRoom />} />
         <Route path="reports" element={<Reports />} />
         <Route path="products/add" element={<ProductForm mode="create" />} />
         <Route path="products/import" element={<ImportProducts />} />
