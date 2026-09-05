@@ -8,12 +8,12 @@ export const DEFAULT_SITE = {
   colorThe: "#5F8F54",
   colorAuction: "#1A1E1A",
   colorHouse: "#5F8F54",
-  colorBg: "#050605",
-  colorPanel: "#121A13",
+  colorBg: "#F2F5F2",
+  colorPanel: "#FFFFFF",
   colorAccent: "#7AAB6D",
-  colorAccent2: "#A3C496",
-  colorText: "#F4F7F2",
-  colorMuted: "#A8B8A4",
+  colorAccent2: "#5F8F54",
+  colorText: "#1A1E1A",
+  colorMuted: "#5E6A5E",
   adminNotifyEmail: "auction@gmail.com",
   vendorEnrolmentMail:
     "Dear Vendor,\n\nThank you for your enquiry with The Auction House.\n\nPlease find enclosed / request for:\n1. Vendor enrolment documents\n2. Auction House terms & conditions\n3. Vendor registration fee details\n\nKindly complete registration after document submission.\n\nRegards,\nThe Auction House\nChennai",
@@ -27,15 +27,33 @@ function hexToRgba(hex, a) {
 }
 
 export function applyTheme(s) {
+  const raw = { ...DEFAULT_SITE, ...(s || {}) };
+  const bg = String(raw.colorBg || "").toLowerCase();
+  const legacyDark = ["#050605", "#000000", "#0a0f0b", "#121a13"].includes(bg);
+  const next = legacyDark
+    ? {
+        ...raw,
+        colorBg: DEFAULT_SITE.colorBg,
+        colorPanel: DEFAULT_SITE.colorPanel,
+        colorAccent: DEFAULT_SITE.colorAccent,
+        colorAccent2: DEFAULT_SITE.colorAccent2,
+        colorText: DEFAULT_SITE.colorText,
+        colorMuted: DEFAULT_SITE.colorMuted,
+        colorThe: DEFAULT_SITE.colorThe,
+        colorAuction: DEFAULT_SITE.colorAuction,
+        colorHouse: DEFAULT_SITE.colorHouse,
+      }
+    : raw;
   const r = document.documentElement;
-  r.style.setProperty("--ink", s.colorBg || DEFAULT_SITE.colorBg);
-  r.style.setProperty("--navy", s.colorPanel || DEFAULT_SITE.colorPanel);
-  r.style.setProperty("--panel", s.colorPanel || DEFAULT_SITE.colorPanel);
-  r.style.setProperty("--copper", s.colorAccent || DEFAULT_SITE.colorAccent);
-  r.style.setProperty("--copper-2", s.colorAccent2 || DEFAULT_SITE.colorAccent2);
-  r.style.setProperty("--cream", s.colorText || DEFAULT_SITE.colorText);
-  r.style.setProperty("--muted", s.colorMuted || DEFAULT_SITE.colorMuted);
-  r.style.setProperty("--line", hexToRgba(s.colorAccent || DEFAULT_SITE.colorAccent, 0.22));
+  r.style.setProperty("--ink", next.colorBg || DEFAULT_SITE.colorBg);
+  r.style.setProperty("--navy", next.colorPanel || DEFAULT_SITE.colorPanel);
+  r.style.setProperty("--panel", next.colorPanel || DEFAULT_SITE.colorPanel);
+  r.style.setProperty("--copper", next.colorAccent || DEFAULT_SITE.colorAccent);
+  r.style.setProperty("--copper-2", next.colorAccent2 || DEFAULT_SITE.colorAccent2);
+  r.style.setProperty("--cream", next.colorText || DEFAULT_SITE.colorText);
+  r.style.setProperty("--muted", next.colorMuted || DEFAULT_SITE.colorMuted);
+  r.style.setProperty("--line", hexToRgba(next.colorText || DEFAULT_SITE.colorText, 0.12));
+  r.style.setProperty("--shadow", "0 18px 44px rgba(26, 40, 26, 0.08)");
 }
 
 const SiteContext = createContext({ site: DEFAULT_SITE, refresh: () => {} });
