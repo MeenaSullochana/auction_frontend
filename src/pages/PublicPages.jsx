@@ -10,15 +10,8 @@ const SERVICE_PAGES = {
   "e-waste": {
     chip: "Service",
     title: "E-waste",
-    // Related atmospheric photos — not home-page / collage uploads
-    hero:
-      "https://images.unsplash.com/photo-1532996122720-e5815d7e2caf?auto=format&fit=crop&w=1800&q=80",
-    photo:
-      "https://images.unsplash.com/photo-1605810230434-7631ac76fc67?auto=format&fit=crop&w=1200&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
-    ],
+    hero: "/media/slide-hardware.jpg",
+    photo: "/media/slide-mobile.jpg",
     headline: "Clear e-waste the right way.",
     lead:
       "Auction House helps companies manage and clear their e-waste in a proper and responsible manner. It supports the safe collection, segregation, recycling, and disposal of electronic waste through appropriate channels.",
@@ -34,14 +27,8 @@ const SERVICE_PAGES = {
   liquidation: {
     chip: "Service",
     title: "Liquidation",
-    hero:
-      "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=1800&q=80",
-    photo:
-      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80",
-    gallery: [
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1000&q=80",
-    ],
+    hero: "/media/hero-yard.jpg",
+    photo: "/media/slide-machinery.jpg",
     headline: "Idle stock → working capital.",
     lead:
       "Auction House runs liquidation desks for excess, end-of-life and surplus inventory — plant stores, consumer goods, vehicles and unfinished lots — through a transparent bidding floor.",
@@ -62,7 +49,6 @@ const AUCTION_TYPE_PAGES = {
     title: "Open Auction",
     hero: "/media/hero-floor.jpg",
     photo: "/media/slide-machinery.jpg",
-    gallery: ["/media/slide-vehicles.jpg", "/media/hero-yard.jpg"],
     headline: "Prices start low and climb in the open.",
     lead:
       "Open auction is the classic rising-bid desk. Multiple approved buyers compete on a shared clock; every raise is visible on the bid tape until the highest accepted bid closes the lot.",
@@ -80,7 +66,6 @@ const AUCTION_TYPE_PAGES = {
     title: "Sealed Auction",
     hero: "/media/slide-scrap.jpg",
     photo: "/media/hero-fleet.jpg",
-    gallery: ["/media/slide-hardware.jpg", "/media/slide-scrap.jpg"],
     headline: "Confidential bids until the desk opens the close.",
     lead:
       "In a sealed auction, buyers submit confidential offers without seeing competing amounts. The house opens the close on schedule and awards against the accepted sealed price.",
@@ -98,7 +83,6 @@ const AUCTION_TYPE_PAGES = {
     title: "Reverse Auction",
     hero: "/media/service-procurement.jpg",
     photo: "/media/slide-vehicles.jpg",
-    gallery: ["/media/slide-kitchen.jpg", "/media/service-procurement.jpg"],
     headline: "One buyer. Competing vendors. Falling prices.",
     lead:
       "Reverse auction flips the floor: you publish what you need — spares, packing, transport or stores — and qualified sellers bid down to win the order on a shared, recorded clock.",
@@ -139,18 +123,6 @@ function DetailPage({ page }) {
           </div>
         </Reveal>
       </section>
-      {!!page.gallery?.length && (
-        <section className="section alt">
-          <div className="container">
-            <p className="chip">Related floor</p>
-            <div className="topic-gallery">
-              {page.gallery.map((src) => (
-                <img key={src} src={src} alt="" />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
     </div>
   );
 }
@@ -192,14 +164,8 @@ export function Home() {
             <Link className="btn btn-gold" to="/about">Read our story</Link>
           </div>
           <div className="photo-stack">
-            <img
-              src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=900&q=80"
-              alt="Recycling and recovery floor"
-            />
-            <img
-              src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=900&q=80"
-              alt="Warehouse liquidation stock"
-            />
+            <img src="/media/slide-hardware.jpg" alt="Hardware and electronics lots" />
+            <img src="/media/hero-yard.jpg" alt="Yard liquidation" />
           </div>
         </Reveal>
       </section>

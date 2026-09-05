@@ -1,24 +1,15 @@
 import { NavLink, Outlet, Link, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../auth";
+import { api } from "../api";
 import Logo from "./Logo";
 
-const MARQUEE_TAGS = [
-  "Plant & machinery",
-  "Commercial vehicles",
-  "Process scrap",
-  "Unused stores",
-  "Unclaimed cargo",
+const FALLBACK_TAGS = [
+  "Chennai floor",
+  "Approved vendors",
+  "Fair clock",
   "E-waste",
   "Liquidation",
-  "Open auction",
-  "Sealed auction",
-  "Reverse auction",
-  "Transparent bid tape",
-  "Approved vendors",
-  "Chennai floor",
-  "Live catalogue",
-  "Fair clock",
 ];
 
 function pastHero() {
@@ -32,9 +23,49 @@ export default function PublicLayout() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [liveNames, setLiveNames] = useState([]);
+  const [showingLive, setShowingLive] = useState(false);
   const location = useLocation();
   const lastY = useRef(0);
-  const loop = [...MARQUEE_TAGS, ...MARQUEE_TAGS];
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = () => {
+      api("/public/auctions")
+        .then((d) => {
+          if (cancelled) return;
+          const live = (d.live || []).map((a) => a.name).filter(Boolean);
+          if (live.length) {
+            setLiveNames(live);
+            setShowingLive(true);
+          } else {
+            const upcoming = (d.upcoming || []).map((a) => a.name).filter(Boolean);
+            setLiveNames(upcoming.slice(0, 6));
+            setShowingLive(false);
+          }
+        })
+        .catch(() => {
+          if (!cancelled) {
+            setLiveNames([]);
+            setShowingLive(false);
+          }
+        });
+    };
+    load();
+    const t = setInterval(load, 60000);
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+    };
+  }, []);
+
+  const marqueeItems = liveNames.length
+    ? liveNames.map((name) => ({
+        type: showingLive ? "live" : "soon",
+        name,
+      }))
+    : FALLBACK_TAGS.map((name) => ({ type: "tag", name }));
+  const loop = [...marqueeItems, ...marqueeItems];
 
   useEffect(() => {
     setOpen(false);
@@ -83,11 +114,23 @@ export default function PublicLayout() {
           hidden ? "is-hidden" : "is-visible",
         ].join(" ")}
       >
-        <div className="header-marquee" aria-hidden>
+        <div className="header-marquee" aria-label="Live auctions">
           <div className="header-marquee-track">
-            {loop.map((tag, i) => (
-              <span className="header-marquee-tag" key={`${tag}-${i}`}>
-                {tag}
+            {loop.map((item, i) => (
+              <span
+                className={`header-marquee-tag ${item.type === "live" ? "is-live-auction" : ""} ${item.type === "soon" ? "is-soon-auction" : ""}`}
+                key={`${item.name}-${i}`}
+              >
+                {item.type === "live" && (
+                  <span className="live-blink">
+                    <i className="live-dot" />
+                    LIVE
+                  </span>
+                )}
+                {item.type === "soon" && (
+                  <span className="soon-badge">UPCOMING</span>
+                )}
+                <span className="marquee-auction-name">{item.name}</span>
               </span>
             ))}
           </div>
