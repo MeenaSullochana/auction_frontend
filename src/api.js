@@ -1,10 +1,25 @@
+// Local (`npm run dev`): leave empty → Vite proxies /api to http://127.0.0.1:5050
+// Netlify production: use Render backend
 const PROD_API = "https://auction-backend-9bgs.onrender.com";
-const apiOrigin = (
-  import.meta.env.VITE_API_URL
-  || (import.meta.env.PROD && typeof window !== "undefined" && window.location.hostname.includes("netlify.app")
-    ? PROD_API
-    : "")
-).replace(/\/$/, "");
+
+function resolveApiOrigin() {
+  const fromEnv = (import.meta.env.VITE_API_URL || "").trim().replace(/\/$/, "");
+  if (fromEnv) return fromEnv;
+
+  // Production build on Netlify (or any live host) → Render
+  if (import.meta.env.PROD) {
+    if (typeof window !== "undefined") {
+      const host = window.location.hostname;
+      if (host === "localhost" || host === "127.0.0.1") return "";
+    }
+    return PROD_API;
+  }
+
+  // Local Vite dev → same-origin /api (proxied)
+  return "";
+}
+
+const apiOrigin = resolveApiOrigin();
 const API_BASE = `${apiOrigin}/api`;
 const UPLOADS = apiOrigin;
 

@@ -4,9 +4,11 @@ import PublicLayout from "./components/PublicLayout";
 import UserLayout from "./components/UserLayout";
 import AdminLayout from "./components/AdminLayout";
 import { About, AuctionPage, Contact, Disposal, Home, Procurement } from "./pages/PublicPages";
-import { AdminLogin, ForgotPassword, Login, Register } from "./pages/AuthPages";
+import { AdminLogin, ForgotPassword, Login } from "./pages/AuthPages";
 import { AuctionProducts, ChangePassword, MultipleBid, ProductBid, UserDashboard, WatchList, WinningHistory } from "./pages/UserPages";
-import { AdminDash, Auctions, BrandSettings, Categories, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
+import { AdminDash, BrandSettings, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
+import { Auctions, Reports } from "./pages/AdminAuctions";
+import { Companies, CompanyDetail, Sliders, VendorDetail, Vendors } from "./pages/AdminPartners";
 
 function UserGate({ children }) {
   const { user, ready } = useAuth();
@@ -34,7 +36,7 @@ export default function App() {
         <Route path="/contact" element={<Contact />} />
       </Route>
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/register" element={<Navigate to="/login" replace />} />
       <Route path="/password/reset" element={<ForgotPassword />} />
 
       <Route path="/user" element={<UserGate><UserLayout /></UserGate>}>
@@ -51,14 +53,19 @@ export default function App() {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminDash />} />
         <Route path="brand" element={<BrandSettings />} />
-        <Route path="categories" element={<Categories />} />
+        <Route path="sliders" element={<Sliders />} />
         <Route path="auctions/:type" element={<Auctions />} />
+        <Route path="reports" element={<Reports />} />
         <Route path="products/add" element={<ProductForm mode="create" />} />
         <Route path="products/import" element={<ImportProducts />} />
         <Route path="products/edit/:id" element={<ProductForm mode="edit" />} />
         <Route path="products/:id/bids" element={<ProductBids />} />
         <Route path="products/:type" element={<Products />} />
         <Route path="winners" element={<Winners />} />
+        <Route path="vendors" element={<Vendors />} />
+        <Route path="vendors/:id" element={<VendorDetail />} />
+        <Route path="companies" element={<Companies />} />
+        <Route path="companies/:id" element={<CompanyDetail />} />
         <Route path="users/:scope" element={<Users />} />
         <Route path="user/:id" element={<UserDetail />} />
         <Route path="contacts" element={<Contacts />} />

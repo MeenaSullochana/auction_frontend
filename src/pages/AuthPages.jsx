@@ -15,7 +15,7 @@ export function Login() {
     <div className="auth-wrap">
       <div className="card auth-card" style={{ width: 420 }}>
         <div style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}><Logo to="/" size="lg" /></div>
-        <h2>Sign In</h2>
+        <h2>Vendor Sign In</h2>
         {err && <div className="alert err">{err}</div>}
         <form onSubmit={async (e) => {
           e.preventDefault();
@@ -32,7 +32,7 @@ export function Login() {
           <button className="btn btn-gold full" style={{ marginTop: 18 }}>Login</button>
         </form>
         <p><Link className="link" to="/password/reset">Forgot password?</Link></p>
-        <p>Don't have an account? <Link className="link" to="/register">Register</Link></p>
+        <p className="lead" style={{ marginTop: 8 }}>Vendor / company enrolment is handled by our desk after Contact enquiry.</p>
       </div>
     </div>
   );

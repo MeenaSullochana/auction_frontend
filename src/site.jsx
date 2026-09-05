@@ -5,15 +5,18 @@ export const DEFAULT_SITE = {
   wordThe: "THE",
   wordAuction: "AUCTION",
   wordHouse: "HOUSE",
-  colorThe: "#93C47D",
-  colorAuction: "#FFFFFF",
-  colorHouse: "#93C47D",
+  colorThe: "#5F8F54",
+  colorAuction: "#1A1E1A",
+  colorHouse: "#5F8F54",
   colorBg: "#050605",
   colorPanel: "#121A13",
-  colorAccent: "#93C47D",
-  colorAccent2: "#C5E3B4",
+  colorAccent: "#7AAB6D",
+  colorAccent2: "#A3C496",
   colorText: "#F4F7F2",
   colorMuted: "#A8B8A4",
+  adminNotifyEmail: "auction@gmail.com",
+  vendorEnrolmentMail:
+    "Dear Vendor,\n\nThank you for your enquiry with The Auction House.\n\nPlease find enclosed / request for:\n1. Vendor enrolment documents\n2. Auction House terms & conditions\n3. Vendor registration fee details\n\nKindly complete registration after document submission.\n\nRegards,\nThe Auction House\nChennai",
 };
 
 function hexToRgba(hex, a) {
