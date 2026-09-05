@@ -279,61 +279,157 @@ export function ProductForm({ mode }) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [lookups, setLookups] = useState({ categories: [], auctions: [] });
-  const [form, setForm] = useState({ name: "", category: "", auction: "", price: "", min_bid_amount: "", code: "", condition: "", location: "", excise_duty: "", sales_duty: "", quantity: 0, started_at: "", expired_at: "" });
+  const [form, setForm] = useState({
+    name: "",
+    category: "",
+    auction: "",
+    price: "",
+    min_bid_amount: "",
+    code: "",
+    condition: "",
+    location: "",
+    excise_duty: "",
+    sales_duty: "",
+    quantity: "1",
+    started_at: "",
+    expired_at: "",
+    gst_mode: "exclusive",
+    gst_percent: "",
+    is_combo: "0",
+  });
   const [image, setImage] = useState(null);
+  const [msg, setMsg] = useState("");
+  const [err, setErr] = useState("");
+
+  const selectedAuction = lookups.auctions.find((a) => String(a.id) === String(form.auction));
+
   useEffect(() => {
     api("/admin/lookups", { auth: "admin" }).then(setLookups);
     if (mode === "edit" && id) {
       api(`/admin/product/${id}`, { auth: "admin" }).then((d) => {
         const p = d.product;
         setForm({
-          name: p.name, category: p.category_id, auction: p.auction_id, price: p.price, min_bid_amount: p.min_bid_amount,
-          code: p.code, condition: p.condition || "", location: p.location || "", excise_duty: p.excise_duty || "",
-          sales_duty: p.sales_duty || "", quantity: p.quantity, started_at: p.started_at || "", expired_at: p.expired_at || "",
+          name: p.name || "",
+          category: p.category_id || "",
+          auction: p.auction_id || "",
+          price: p.price ?? "",
+          min_bid_amount: p.min_bid_amount ?? "",
+          code: p.code || "",
+          condition: p.condition || "",
+          location: p.location || "",
+          excise_duty: p.excise_duty || "",
+          sales_duty: p.sales_duty || "",
+          quantity: p.quantity ?? "1",
+          started_at: p.started_at || "",
+          expired_at: p.expired_at || "",
+          gst_mode: p.gst_mode || "exclusive",
+          gst_percent: p.gst_percent ?? "",
+          is_combo: String(p.condition || "").toLowerCase() === "combo" ? "1" : "0",
         });
       });
     }
   }, [mode, id]);
+
+  const applyAuction = (auctionId) => {
+    const a = lookups.auctions.find((x) => String(x.id) === String(auctionId));
+    setForm((f) => ({
+      ...f,
+      auction: auctionId,
+      started_at: a?.started_at || f.started_at,
+      expired_at: a?.expired_at || f.expired_at,
+      location: f.location || a?.goods_location || "",
+      gst_mode: a?.gst_mode || f.gst_mode || "exclusive",
+      category: f.category || "",
+    }));
+  };
+
   const submit = async (e) => {
     e.preventDefault();
-    const fd = new FormData();
-    Object.entries(form).forEach(([k, v]) => fd.append(k, v));
-    if (image) fd.append("image", image);
-    if (mode === "edit") await api(`/admin/products/${id}`, { method: "PUT", body: fd, auth: "admin", isForm: true });
-    else await api("/admin/products", { method: "POST", body: fd, auth: "admin", isForm: true });
-    navigate("/admin/products/all");
+    setMsg("");
+    setErr("");
+    try {
+      const fd = new FormData();
+      Object.entries(form).forEach(([k, v]) => fd.append(k, v ?? ""));
+      if (image) fd.append("image", image);
+      if (mode === "edit") await api(`/admin/products/${id}`, { method: "PUT", body: fd, auth: "admin", isForm: true });
+      else await api("/admin/products", { method: "POST", body: fd, auth: "admin", isForm: true });
+      setMsg("Product saved");
+      navigate(form.auction ? `/admin/products/AuctionWise?auction_id=${form.auction}` : "/admin/products/all");
+    } catch (ex) {
+      setErr(ex.message || "Save failed");
+    }
   };
+
   return (
-    <div>
-      <h2>{mode === "edit" ? "Update Product" : "Create Product"}</h2>
-      <form className="card" onSubmit={submit}>
-        <div className="form-grid">
-          <div className="field"><label>Image</label><input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => setImage(e.target.files[0])} /></div>
-          <div className="field"><label>Name</label><input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+    <div className="admin-page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Products</p>
+          <h2>{mode === "edit" ? "Update product" : "Add product"}</h2>
+          <p className="lead">Same fields as the auction desk — lot sits under an Open, Sealed or Reverse sale.</p>
+        </div>
+      </div>
+      {msg && <div className="alert ok">{msg}</div>}
+      {err && <div className="alert err">{err}</div>}
+      <form className="panel" onSubmit={submit}>
+        <div className="form-grid premium-grid">
+          <div className="field"><label>Auction *</label>
+            <select required value={form.auction} onChange={(e) => applyAuction(e.target.value)}>
+              <option value="">Select auction</option>
+              {lookups.auctions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.unique_id ? `${c.unique_id} — ` : ""}{c.name} ({c.auction_type || "Open Auction"})
+                </option>
+              ))}
+            </select>
+          </div>
           <div className="field"><label>Category</label>
-            <select required value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-              <option value="">Select One</option>
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              <option value="">From auction / select</option>
               {lookups.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <div className="field"><label>Auction Name</label>
-            <select required value={form.auction} onChange={(e) => setForm({ ...form, auction: e.target.value })}>
-              <option value="">Select One</option>
-              {lookups.auctions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+
+          {selectedAuction && (
+            <div className="field full auction-hint">
+              <span>Type <b>{selectedAuction.auction_type || "—"}</b></span>
+              <span>Category <b>{selectedAuction.auction_category || "—"}</b></span>
+              <span>Division <b>{selectedAuction.division || "—"}</b></span>
+              <span>Firm <b>{selectedAuction.firm || "—"}</b></span>
+              <span>GST <b>{selectedAuction.gst_mode === "inclusive" ? "Inc" : "Exc"}</b></span>
+            </div>
+          )}
+
+          <div className="field"><label>Image</label><input type="file" accept=".png,.jpg,.jpeg" onChange={(e) => setImage(e.target.files[0])} /></div>
+          <div className="field"><label>Mode</label>
+            <select value={form.is_combo} onChange={(e) => setForm({ ...form, is_combo: e.target.value, condition: e.target.value === "1" ? "Combo" : form.condition === "Combo" ? "" : form.condition })}>
+              <option value="0">Separate product</option>
+              <option value="1">Combo (one price)</option>
             </select>
           </div>
-          <div className="field"><label>Price</label><input type="number" required min="0" step="any" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} /></div>
-          <div className="field"><label>Min Bid Increment Amount</label><input type="number" required min="0" step="any" value={form.min_bid_amount} onChange={(e) => setForm({ ...form, min_bid_amount: e.target.value })} /></div>
-          <div className="field"><label>Enter Product Code</label><input required value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} /></div>
-          <div className="field"><label>Quantity</label><input required type="number" min="0" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} /></div>
-          <div className="field"><label>Condition <span style={{ color: "var(--muted)", fontSize: 11 }}>(optional)</span></label><input value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value })} placeholder="e.g. Used - Good" /></div>
-          <div className="field"><label>Location <span style={{ color: "var(--muted)", fontSize: 11 }}>(optional)</span></label><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="e.g. Chennai Yard" /></div>
-          <div className="field"><label>Excise Duty (%) <span style={{ color: "var(--muted)", fontSize: 11 }}>(optional)</span></label><input type="number" min="0" step="any" value={form.excise_duty} onChange={(e) => setForm({ ...form, excise_duty: e.target.value })} placeholder="e.g. 12" /></div>
-          <div className="field"><label>Sales Duty (%) <span style={{ color: "var(--muted)", fontSize: 11 }}>(optional)</span></label><input type="number" min="0" step="any" value={form.sales_duty} onChange={(e) => setForm({ ...form, sales_duty: e.target.value })} placeholder="e.g. 18" /></div>
-          <div className="field"><label>Open Date &amp; Time</label><input type="datetime-local" required value={toLocalInput(form.started_at)} onChange={(e) => setForm({ ...form, started_at: fromLocalInput(e.target.value) })} /></div>
-          <div className="field"><label>Close Date &amp; Time</label><input type="datetime-local" required value={toLocalInput(form.expired_at)} onChange={(e) => setForm({ ...form, expired_at: fromLocalInput(e.target.value) })} /></div>
+          <div className="field"><label>Item name *</label><input required value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} /></div>
+          <div className="field"><label>Item code *</label><input required value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} /></div>
+          <div className="field"><label>Start price *</label><input type="number" required min="0" step="any" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} /></div>
+          <div className="field"><label>Min bid increment *</label><input type="number" required min="0" step="any" value={form.min_bid_amount} onChange={(e) => setForm({ ...form, min_bid_amount: e.target.value })} /></div>
+          <div className="field"><label>Quantity *</label><input required type="number" min="0" value={form.quantity} onChange={(e) => setForm({ ...form, quantity: e.target.value })} /></div>
+          <div className="field"><label>Condition</label><input value={form.condition} onChange={(e) => setForm({ ...form, condition: e.target.value })} placeholder="e.g. Used - Good" /></div>
+          <div className="field"><label>Location</label><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Yard / goods location" /></div>
+          <div className="field"><label>GST mode</label>
+            <select value={form.gst_mode} onChange={(e) => setForm({ ...form, gst_mode: e.target.value })}>
+              <option value="exclusive">Exclusive (Exc Tax)</option>
+              <option value="inclusive">Inclusive (Inc Tax)</option>
+            </select>
+          </div>
+          <div className="field"><label>GST %</label><input type="number" min="0" step="any" value={form.gst_percent} onChange={(e) => setForm({ ...form, gst_percent: e.target.value })} placeholder="e.g. 18" /></div>
+          <div className="field"><label>Excise duty %</label><input type="number" min="0" step="any" value={form.excise_duty} onChange={(e) => setForm({ ...form, excise_duty: e.target.value })} /></div>
+          <div className="field"><label>Sales duty %</label><input type="number" min="0" step="any" value={form.sales_duty} onChange={(e) => setForm({ ...form, sales_duty: e.target.value })} /></div>
+          <div className="field"><label>Open date &amp; time *</label><input type="datetime-local" required value={toLocalInput(form.started_at)} onChange={(e) => setForm({ ...form, started_at: fromLocalInput(e.target.value) })} /></div>
+          <div className="field"><label>Close date &amp; time *</label><input type="datetime-local" required value={toLocalInput(form.expired_at)} onChange={(e) => setForm({ ...form, expired_at: fromLocalInput(e.target.value) })} /></div>
         </div>
-        <button className="btn btn-gold" style={{ marginTop: 16 }}>Save</button>
+        <div className="action-row" style={{ marginTop: 16 }}>
+          <button className="btn btn-primary-soft" type="submit">Save product</button>
+          <button type="button" className="btn soft-toggle" onClick={() => navigate(-1)}>Cancel</button>
+        </div>
       </form>
     </div>
   );
@@ -341,49 +437,85 @@ export function ProductForm({ mode }) {
 
 export function ImportProducts() {
   const [lookups, setLookups] = useState({ categories: [], auctions: [] });
-  const [form, setForm] = useState({ category: "", auction: "", started_at: "", expired_at: "" });
+  const [form, setForm] = useState({ category: "", auction: "", started_at: "", expired_at: "", gst_mode: "" });
   const [file, setFile] = useState(null);
   const [msg, setMsg] = useState("");
+  const [err, setErr] = useState("");
   useEffect(() => { api("/admin/lookups", { auth: "admin" }).then(setLookups); }, []);
+
+  const onAuction = (auctionId) => {
+    const a = lookups.auctions.find((x) => String(x.id) === String(auctionId));
+    setForm((f) => ({
+      ...f,
+      auction: auctionId,
+      started_at: a?.started_at || f.started_at,
+      expired_at: a?.expired_at || f.expired_at,
+      gst_mode: a?.gst_mode || f.gst_mode,
+    }));
+  };
+
   return (
-    <div>
-      <div className="toolbar">
-        <h2>Import Product</h2>
+    <div className="admin-page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Products</p>
+          <h2>Import products</h2>
+          <p className="lead">Excel rows map to the same auction product fields (Open / Sealed / Reverse sales).</p>
+        </div>
         <button
           type="button"
-          className="btn btn-gold"
+          className="btn soft-toggle"
           onClick={() => download("/admin/products/import/sample/excel", "ProductImportSample.xlsx")}
         >
-          Download Sample Excel
+          Download sample Excel
         </button>
       </div>
       {msg && <div className="alert ok">{msg}</div>}
-      <form className="card" onSubmit={async (e) => {
+      {err && <div className="alert err">{err}</div>}
+      <form className="panel" onSubmit={async (e) => {
         e.preventDefault();
-        const fd = new FormData();
-        Object.entries(form).forEach(([k, v]) => fd.append(k, v));
-        fd.append("import_file", file);
-        const d = await api("/admin/products/import", { method: "POST", body: fd, auth: "admin", isForm: true });
-        setMsg(d.message);
+        setMsg("");
+        setErr("");
+        try {
+          const fd = new FormData();
+          Object.entries(form).forEach(([k, v]) => fd.append(k, v ?? ""));
+          fd.append("import_file", file);
+          const d = await api("/admin/products/import", { method: "POST", body: fd, auth: "admin", isForm: true });
+          setMsg(d.message);
+        } catch (ex) {
+          setErr(ex.message);
+        }
       }}>
-        <div className="form-grid">
+        <div className="form-grid premium-grid">
+          <div className="field"><label>Auction *</label>
+            <select required value={form.auction} onChange={(e) => onAuction(e.target.value)}>
+              <option value="">Select auction</option>
+              {lookups.auctions.map((c) => (
+                <option key={c.id} value={c.id}>{c.name} ({c.auction_type || "Open Auction"})</option>
+              ))}
+            </select>
+          </div>
           <div className="field"><label>Category</label>
-            <select required value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
-              <option value="">Select One</option>
+            <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+              <option value="">From auction / select</option>
               {lookups.categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
           </div>
-          <div className="field"><label>Auction</label>
-            <select required value={form.auction} onChange={(e) => setForm({ ...form, auction: e.target.value })}>
-              <option value="">Select One</option>
-              {lookups.auctions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+          <div className="field"><label>GST mode</label>
+            <select value={form.gst_mode} onChange={(e) => setForm({ ...form, gst_mode: e.target.value })}>
+              <option value="">Use auction default</option>
+              <option value="exclusive">Exclusive</option>
+              <option value="inclusive">Inclusive</option>
             </select>
           </div>
-          <div className="field"><label>Open Date &amp; Time</label><input type="datetime-local" required value={toLocalInput(form.started_at)} onChange={(e) => setForm({ ...form, started_at: fromLocalInput(e.target.value) })} /></div>
-          <div className="field"><label>Close Date &amp; Time</label><input type="datetime-local" required value={toLocalInput(form.expired_at)} onChange={(e) => setForm({ ...form, expired_at: fromLocalInput(e.target.value) })} /></div>
-          <div className="field full"><label>Excel file</label><input type="file" required onChange={(e) => setFile(e.target.files[0])} /></div>
+          <div className="field"><label>Open date &amp; time</label><input type="datetime-local" value={toLocalInput(form.started_at)} onChange={(e) => setForm({ ...form, started_at: fromLocalInput(e.target.value) })} /></div>
+          <div className="field"><label>Close date &amp; time</label><input type="datetime-local" value={toLocalInput(form.expired_at)} onChange={(e) => setForm({ ...form, expired_at: fromLocalInput(e.target.value) })} /></div>
+          <div className="field full"><label>Excel file *</label><input type="file" required accept=".xlsx,.xls,.csv" onChange={(e) => setFile(e.target.files[0])} /></div>
         </div>
-        <button className="btn btn-gold" style={{ marginTop: 16 }}>Import</button>
+        <p className="empty-note" style={{ marginTop: 12 }}>
+          Columns: mode (simple/combo), name, code, price, min_bid_amount, quantity, condition, location, excise_duty, sales_duty, gst_percent, combo_items
+        </p>
+        <button className="btn btn-primary-soft" style={{ marginTop: 16 }}>Import</button>
       </form>
     </div>
   );

@@ -19,7 +19,7 @@ export const SHOWCASE_SLIDES = [
     label: "E-waste",
     title: "Clear e-waste the right way",
     text: "Safe collection, recycling and EPR support — value recovered, compliance kept.",
-    image: "/media/slide-ewaste.jpg",
+    image: "/media/slide-consumer.jpg",
     cta: { label: "E-waste", to: "/services/e-waste" },
   },
   {
@@ -27,7 +27,7 @@ export const SHOWCASE_SLIDES = [
     label: "Liquidation",
     title: "Idle stock → working capital",
     text: "Excess and end-of-life inventory cleared through a transparent auction desk.",
-    image: "/media/slide-liquidation.jpg",
+    image: "/media/hero-yard.jpg",
     cta: { label: "Liquidation", to: "/services/liquidation" },
   },
   {

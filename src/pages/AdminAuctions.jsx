@@ -313,8 +313,8 @@ export function Auctions() {
               <select required value={form.auction_type} onChange={(e) => set("auction_type", e.target.value)}>
                 <option value="">Select</option>
                 <option>Open Auction</option>
-                <option>Reverse Auction</option>
                 <option>Sealed Auction</option>
+                <option>Reverse Auction</option>
               </select>
             </div>
             <div className="field"><label>Category<Req /></label>

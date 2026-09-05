@@ -6,9 +6,9 @@ import AdminLayout from "./components/AdminLayout";
 import { About, AuctionPage, AuctionTypeDetail, Contact, Disposal, Home, Procurement, ServiceDetail } from "./pages/PublicPages";
 import { AdminLogin, ForgotPassword, Login } from "./pages/AuthPages";
 import { AuctionProducts, BidderRoom, ChangePassword, MultipleBid, ProductBid, UserDashboard, WatchList, WinningHistory } from "./pages/UserPages";
-import { AdminDash, BrandSettings, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
+import { AdminDash, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
 import { Auctions, AdminLiveRoom, Reports } from "./pages/AdminAuctions";
-import { Companies, CompanyDetail, Sliders, VendorCreate, VendorDetail, Vendors } from "./pages/AdminPartners";
+import { Companies, CompanyDetail, VendorCreate, VendorDetail, Vendors } from "./pages/AdminPartners";
 
 function UserGate({ children }) {
   const { user, ready } = useAuth();
@@ -55,8 +55,8 @@ export default function App() {
       <Route path="/admin" element={<AdminArea />}>
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route path="dashboard" element={<AdminDash />} />
-        <Route path="brand" element={<BrandSettings />} />
-        <Route path="sliders" element={<Sliders />} />
+        <Route path="brand" element={<Navigate to="/admin/dashboard" replace />} />
+        <Route path="sliders" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="auctions/:type" element={<Auctions />} />
         <Route path="auction/:id/live-room" element={<AdminLiveRoom />} />
         <Route path="reports" element={<Reports />} />

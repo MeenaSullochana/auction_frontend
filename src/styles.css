@@ -1532,6 +1532,50 @@ th { color: var(--copper-2); font-weight: 700; }
   gap: clamp(24px, 4vw, 48px);
 }
 
+.topic-hero {
+  min-height: min(58vh, 520px);
+  display: flex;
+  align-items: flex-end;
+}
+.topic-hero-copy {
+  padding-bottom: clamp(28px, 6vh, 56px);
+  max-width: 720px;
+}
+.topic-hero-lead {
+  margin: 12px 0 0;
+  font-size: clamp(15px, 2vw, 18px);
+  line-height: 1.55;
+  color: rgba(255,255,255,.88);
+  text-shadow: 0 1px 12px rgba(0,0,0,.35);
+}
+.topic-gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 18px;
+}
+.topic-gallery img {
+  width: 100%;
+  height: clamp(180px, 28vw, 280px);
+  object-fit: cover;
+  border-radius: 18px;
+}
+.auction-hint {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: rgba(147, 196, 125, 0.08);
+  border: 1px solid rgba(147, 196, 125, 0.16);
+  font-size: 13px;
+  color: var(--muted);
+}
+.auction-hint b { color: var(--cream); font-weight: 650; }
+@media (max-width: 700px) {
+  .topic-gallery { grid-template-columns: 1fr; }
+}
+
 /* Bidder room */
 .room-topbar {
   display: flex;

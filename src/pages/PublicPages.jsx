@@ -10,29 +10,35 @@ const SERVICE_PAGES = {
   "e-waste": {
     chip: "Service",
     title: "E-waste",
-    hero: "/media/slide-ewaste.jpg",
-    photo: "/media/slide-ewaste.jpg",
+    hero: "/media/slide-consumer.jpg",
+    photo: "/media/slide-mobile.jpg",
+    gallery: ["/media/slide-hardware.jpg", "/media/slide-home.jpg"],
     headline: "Clear e-waste the right way.",
     lead:
-      "Safe collection, recycling and EPR support — value recovered from boards, handsets, appliances and IT assets while compliance stays on record.",
+      "Auction House helps companies manage and clear their e-waste in a proper and responsible manner. It supports the safe collection, segregation, recycling, and disposal of electronic waste through appropriate channels.",
+    body:
+      "Auction House also helps companies obtain Extended Producer Responsibility (EPR) credits by supporting proper e-waste recycling and compliance processes. This helps organizations reduce environmental impact, meet regulatory requirements, and recover value from their e-waste.",
     points: [
-      "Sorted lots with photos, codes and quantity notes",
-      "Approved vendor desks for recycling and recovery",
-      "Suitable for corporates, plants and surplus IT fleets",
+      "Safe collection, segregation and recycling channels",
+      "EPR credit support for compliance teams",
+      "Value recovery from boards, handsets, appliances and IT assets",
     ],
     cta: { label: "See live lots", to: "/auction" },
   },
   liquidation: {
     chip: "Service",
     title: "Liquidation",
-    hero: "/media/slide-liquidation.jpg",
-    photo: "/media/slide-liquidation.jpg",
+    hero: "/media/hero-yard.jpg",
+    photo: "/media/slide-machinery.jpg",
+    gallery: ["/media/slide-home.jpg", "/media/slide-auto.jpg"],
     headline: "Idle stock → working capital.",
     lead:
-      "Excess and end-of-life inventory cleared through a transparent auction desk — plant stores, consumer goods, vehicles and unfinished lots moved with a fair clock.",
+      "Auction House runs liquidation desks for excess, end-of-life and surplus inventory — plant stores, consumer goods, vehicles and unfinished lots — through a transparent bidding floor.",
+    body:
+      "One seller, many buyers and a shared clock: catalogues can be typed lot by lot or imported from Excel. Principals keep control of reserves while winners and amounts stay on record for collection and delivery.",
     points: [
-      "One seller, many buyers, rising competitive bids",
-      "Catalogues typed lot by lot or imported from Excel",
+      "Transparent rising bids for disposal and surplus clears",
+      "Lot photos, codes, quantity and location on every card",
       "Winner reports with amounts and bidder names",
     ],
     cta: { label: "Request a desk", to: "/contact" },
@@ -41,47 +47,56 @@ const SERVICE_PAGES = {
 
 const AUCTION_TYPE_PAGES = {
   open: {
-    chip: "Auction format",
+    chip: "Auction type",
     title: "Open Auction",
     hero: "/media/hero-floor.jpg",
     photo: "/media/slide-machinery.jpg",
+    gallery: ["/media/slide-vehicles.jpg", "/media/hero-yard.jpg"],
     headline: "Prices start low and climb in the open.",
     lead:
-      "Multiple buyers compete on a shared clock. Every raise is visible on the bid tape until the highest accepted bid closes the lot.",
+      "Open auction is the classic rising-bid desk. Multiple approved buyers compete on a shared clock; every raise is visible on the bid tape until the highest accepted bid closes the lot.",
+    body:
+      "Use open format for liquidation and e-waste clears when principals want competitive, transparent pricing with live remaining time and anti-snipe extensions.",
     points: [
-      "Transparent rising bids for disposal and liquidation",
-      "Live remaining time with anti-snipe extensions",
-      "Approved bidders only — pending accounts stay off the floor",
+      "Visible bid ladder for every lot",
+      "Live countdown with late-bid extensions",
+      "Approved bidders only",
     ],
     cta: { label: "View live sales", to: "/auction" },
   },
   sealed: {
-    chip: "Auction format",
+    chip: "Auction type",
     title: "Sealed Auction",
     hero: "/media/slide-scrap.jpg",
-    photo: "/media/service-disposal.jpg",
+    photo: "/media/hero-fleet.jpg",
+    gallery: ["/media/slide-hardware.jpg", "/media/slide-scrap.jpg"],
     headline: "Confidential bids until the desk opens the close.",
     lead:
-      "Buyers submit sealed offers without seeing competing amounts. The house opens the close on schedule and awards against the accepted sealed price.",
+      "In a sealed auction, buyers submit confidential offers without seeing competing amounts. The house opens the close on schedule and awards against the accepted sealed price.",
+    body:
+      "Choose sealed when principals want quiet, competitive offers — no public bid ladder during the sale window — with results attached to the lot for collection.",
     points: [
-      "Useful when principals want quiet, competitive offers",
-      "No public bid ladder during the sale window",
-      "Results stay attached to the lot for collection",
+      "No public ladder during the window",
+      "Scheduled open of sealed closes",
+      "Results stay on the lot record",
     ],
     cta: { label: "Talk to the desk", to: "/contact" },
   },
   reverse: {
-    chip: "Auction format",
+    chip: "Auction type",
     title: "Reverse Auction",
     hero: "/media/service-procurement.jpg",
     photo: "/media/slide-vehicles.jpg",
+    gallery: ["/media/slide-kitchen.jpg", "/media/service-procurement.jpg"],
     headline: "One buyer. Competing vendors. Falling prices.",
     lead:
-      "You publish what you need — spares, packing, transport or stores — and qualified sellers bid down to win the order on a shared, recorded clock.",
+      "Reverse auction flips the floor: you publish what you need — spares, packing, transport or stores — and qualified sellers bid down to win the order on a shared, recorded clock.",
+    body:
+      "Purchasing teams can defend the final rate. Assign only approved vendors to a given sale — ideal for recurring industrial supply and procurement desks.",
     points: [
-      "Vendor competition that purchasing teams can defend",
-      "Assign only approved users to a given sale",
-      "Ideal for recurring industrial supply",
+      "Vendors compete by lowering price",
+      "Assign approved users per sale",
+      "Recorded tape for audit-ready closes",
     ],
     cta: { label: "Request reverse desk", to: "/contact" },
   },
@@ -90,19 +105,20 @@ const AUCTION_TYPE_PAGES = {
 function DetailPage({ page }) {
   if (!page) return <Navigate to="/" replace />;
   return (
-    <div>
-      <div className="page-hero with-photo" style={{ backgroundImage: `url(${page.hero})` }}>
-        <div className="container">
+    <div className="topic-page">
+      <div className="page-hero with-photo topic-hero" style={{ backgroundImage: `url(${page.hero})` }}>
+        <div className="container topic-hero-copy">
           <p className="chip chip-on-dark">{page.chip}</p>
           <h1>{page.title}</h1>
+          <p className="topic-hero-lead">{page.lead}</p>
         </div>
       </div>
       <section className="section">
         <Reveal className="container split detail-split">
-          <img className="round-photo detail-photo" src={page.photo} alt={page.title} />
+          <img className="round-photo detail-photo" src={page.photo} alt="" />
           <div>
             <h2>{page.headline}</h2>
-            <p className="lead">{page.lead}</p>
+            {page.body && <p className="lead">{page.body}</p>}
             <ul className="ticks">
               {page.points.map((p) => (
                 <li key={p}>{p}</li>
@@ -112,6 +128,18 @@ function DetailPage({ page }) {
           </div>
         </Reveal>
       </section>
+      {!!page.gallery?.length && (
+        <section className="section alt">
+          <div className="container">
+            <p className="chip">Related floor</p>
+            <div className="topic-gallery">
+              {page.gallery.map((src) => (
+                <img key={src} src={src} alt="" />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   );
 }
@@ -153,8 +181,8 @@ export function Home() {
             <Link className="btn btn-gold" to="/about">Read our story</Link>
           </div>
           <div className="photo-stack">
-            <img src="/media/slide-ewaste.jpg" alt="E-waste recovery lots" />
-            <img src="/media/slide-liquidation.jpg" alt="Liquidation catalogue" />
+            <img src="/media/slide-consumer.jpg" alt="Electronics lots" />
+            <img src="/media/hero-yard.jpg" alt="Yard liquidation" />
           </div>
         </Reveal>
       </section>
@@ -215,18 +243,25 @@ export function AuctionPage() {
         </div>
       </div>
       <section className="section">
+        <div className="container" style={{ marginBottom: 24 }}>
+          <div className="action-row">
+            <Link className="btn soft-toggle" to="/auctions/open">Open Auction</Link>
+            <Link className="btn soft-toggle" to="/auctions/sealed">Sealed Auction</Link>
+            <Link className="btn soft-toggle" to="/auctions/reverse">Reverse Auction</Link>
+          </div>
+        </div>
         <div className="container grid-2">
           <Reveal className="card" delay={0}>
             <h3>Open now</h3>
             <ul className="lot-list">
-              {data.live.map((a) => <li key={a.id}>{a.name}</li>)}
+              {data.live.map((a) => <li key={a.id}>{a.name}{a.auction_type ? ` · ${a.auction_type}` : ""}</li>)}
             </ul>
             {!data.live.length && <p className="lead">No live sale at this hour. Check upcoming lots or request access.</p>}
           </Reveal>
           <Reveal className="card" delay={100}>
             <h3>On the calendar</h3>
             <ul className="lot-list">
-              {data.upcoming.map((a) => <li key={a.id}>{a.name}</li>)}
+              {data.upcoming.map((a) => <li key={a.id}>{a.name}{a.auction_type ? ` · ${a.auction_type}` : ""}</li>)}
             </ul>
             {!data.upcoming.length && <p className="lead">No upcoming sale posted yet.</p>}
           </Reveal>

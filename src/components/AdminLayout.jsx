@@ -32,10 +32,8 @@ export default function AdminLayout() {
         <Logo to="/admin/dashboard" size="sm" />
         <nav>
           <NavLink to="/admin/dashboard">Dashboard</NavLink>
-          <NavLink to="/admin/brand">Logo &amp; Colors</NavLink>
-          <NavLink to="/admin/sliders">Sliders</NavLink>
 
-          <NavGroup label="Auctions" match={(p) => p.startsWith("/admin/auctions")}>
+          <NavGroup label="Auctions" match={(p) => p.startsWith("/admin/auctions") || p.startsWith("/admin/auction/")}>
             <NavLink to="/admin/auctions/create">Create Auction</NavLink>
             <NavLink to="/admin/auctions/all">All</NavLink>
             <NavLink to="/admin/auctions/live">Live</NavLink>
