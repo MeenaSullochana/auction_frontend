@@ -10,9 +10,15 @@ const SERVICE_PAGES = {
   "e-waste": {
     chip: "Service",
     title: "E-waste",
-    hero: "/media/slide-consumer.jpg",
-    photo: "/media/slide-mobile.jpg",
-    gallery: ["/media/slide-hardware.jpg", "/media/slide-home.jpg"],
+    // Related atmospheric photos — not home-page / collage uploads
+    hero:
+      "https://images.unsplash.com/photo-1532996122720-e5815d7e2caf?auto=format&fit=crop&w=1800&q=80",
+    photo:
+      "https://images.unsplash.com/photo-1605810230434-7631ac76fc67?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80",
+    ],
     headline: "Clear e-waste the right way.",
     lead:
       "Auction House helps companies manage and clear their e-waste in a proper and responsible manner. It supports the safe collection, segregation, recycling, and disposal of electronic waste through appropriate channels.",
@@ -28,9 +34,14 @@ const SERVICE_PAGES = {
   liquidation: {
     chip: "Service",
     title: "Liquidation",
-    hero: "/media/hero-yard.jpg",
-    photo: "/media/slide-machinery.jpg",
-    gallery: ["/media/slide-home.jpg", "/media/slide-auto.jpg"],
+    hero:
+      "https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=1800&q=80",
+    photo:
+      "https://images.unsplash.com/photo-1581094794329-c8112a89af12?auto=format&fit=crop&w=1200&q=80",
+    gallery: [
+      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
+      "https://images.unsplash.com/photo-1504917595217-d4dc5ebe6122?auto=format&fit=crop&w=1000&q=80",
+    ],
     headline: "Idle stock → working capital.",
     lead:
       "Auction House runs liquidation desks for excess, end-of-life and surplus inventory — plant stores, consumer goods, vehicles and unfinished lots — through a transparent bidding floor.",
@@ -181,8 +192,14 @@ export function Home() {
             <Link className="btn btn-gold" to="/about">Read our story</Link>
           </div>
           <div className="photo-stack">
-            <img src="/media/slide-consumer.jpg" alt="Electronics lots" />
-            <img src="/media/hero-yard.jpg" alt="Yard liquidation" />
+            <img
+              src="https://images.unsplash.com/photo-1611273426858-450d8e3c9fce?auto=format&fit=crop&w=900&q=80"
+              alt="Recycling and recovery floor"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1566576721346-d4a3b4eaeb55?auto=format&fit=crop&w=900&q=80"
+              alt="Warehouse liquidation stock"
+            />
           </div>
         </Reveal>
       </section>
