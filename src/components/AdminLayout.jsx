@@ -58,6 +58,7 @@ export default function AdminLayout() {
             }
           >
             <NavLink to="/admin/users/all">All Vendors</NavLink>
+            <NavLink to="/admin/vendors/new">Add Vendor</NavLink>
             <NavLink to="/admin/users/active">Active</NavLink>
             <NavLink to="/admin/users/inactive">Inactive</NavLink>
             <NavLink to="/admin/companies">Companies</NavLink>

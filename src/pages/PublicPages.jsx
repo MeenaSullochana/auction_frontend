@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../api";
+import { useAuth } from "../auth";
 import Reveal from "../components/Reveal";
 import ContentShowcase from "../components/ContentShowcase";
 import AuctionScroll from "../components/AuctionScroll";
@@ -163,17 +164,48 @@ export function AuctionPage() {
   );
 }
 
-export function Contact() {
-  const [form, setForm] = useState({
-    firm_name: "",
-    address: "",
-    contact_person: "",
-    contact_no: "",
-    email: "",
+function profileToEnquiry(user) {
+  if (!user) {
+    return {
+      firm_name: "",
+      address: "",
+      contact_person: "",
+      contact_no: "",
+      email: "",
+      message: "",
+    };
+  }
+  const contactPerson =
+    user.contact_person
+    || `${user.firstname || ""} ${user.lastname || ""}`.trim()
+    || user.name
+    || user.username
+    || "";
+  return {
+    firm_name: user.firm_name || "",
+    address: user.address || "",
+    contact_person: contactPerson,
+    contact_no: user.contact_no || user.mobile || "",
+    email: user.email || user.contact_email || "",
     message: "",
-  });
+  };
+}
+
+export function Contact() {
+  const { user, ready } = useAuth();
+  const [form, setForm] = useState(profileToEnquiry(null));
   const [msg, setMsg] = useState("");
   const [err, setErr] = useState("");
+
+  useEffect(() => {
+    if (!ready) return;
+    setForm((prev) => {
+      const filled = profileToEnquiry(user);
+      // Keep any message the user already typed; overwrite identity fields from profile when logged in.
+      return { ...filled, message: prev.message || "" };
+    });
+  }, [ready, user]);
+
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   return (
     <div>
@@ -232,19 +264,17 @@ export function Contact() {
               try {
                 const data = await api("/public/contact", { method: "POST", body: form });
                 setMsg(data.message);
-                setForm({
-                  firm_name: "",
-                  address: "",
-                  contact_person: "",
-                  contact_no: "",
-                  email: "",
-                  message: "",
-                });
+                setForm(profileToEnquiry(user));
               } catch (ex) {
                 setErr(ex.message || "Could not send enquiry");
               }
             }}
           >
+            {user && (
+              <p className="lead" style={{ marginBottom: 12 }}>
+                Signed in as <strong>{user.username}</strong> — firm and contact fields are filled from your vendor profile.
+              </p>
+            )}
             {msg && <div className="alert ok">{msg}</div>}
             {err && <div className="alert err">{err}</div>}
             <div className="form-grid">

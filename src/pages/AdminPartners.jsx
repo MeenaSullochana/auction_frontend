@@ -65,6 +65,102 @@ export function Vendors() {
   return <Navigate to="/admin/users/all" replace />;
 }
 
+const emptyVendor = {
+  username: "",
+  password: "",
+  email: "",
+  name: "",
+  firm_name: "",
+  address: "",
+  contact_person: "",
+  contact_no: "",
+  alternate_contact_no: "",
+  gst_no: "",
+  pan_no: "",
+  validation_status: "Pending",
+  status: "1",
+};
+
+export function VendorCreate() {
+  const navigate = useNavigate();
+  const [form, setForm] = useState(emptyVendor);
+  const [docs, setDocs] = useState([]);
+  const [images, setImages] = useState([]);
+  const [msg, setMsg] = useState("");
+  const [err, setErr] = useState("");
+  const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
+
+  return (
+    <div className="admin-page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Vendors</p>
+          <h2>Add vendor</h2>
+          <p className="lead">Create a login vendor with firm details, documents and images.</p>
+        </div>
+        <button type="button" className="btn soft-toggle" onClick={() => navigate("/admin/users/all")}>Back to list</button>
+      </div>
+      {msg && <div className="alert ok">{msg}</div>}
+      {err && <div className="alert err">{err}</div>}
+
+      <form
+        className="panel"
+        onSubmit={async (e) => {
+          e.preventDefault();
+          setMsg("");
+          setErr("");
+          try {
+            const fd = new FormData();
+            Object.entries(form).forEach(([k, val]) => fd.append(k, val ?? ""));
+            fd.append("contact_email", form.email || "");
+            docs.forEach((f) => fd.append("documents", f));
+            images.forEach((f) => fd.append("images", f));
+            const d = await api("/admin/vendors", { method: "POST", body: fd, auth: "admin", isForm: true });
+            setMsg(d.message || "Vendor added");
+            const id = d.vendor?.id;
+            if (id) navigate(`/admin/vendors/${id}`);
+            else navigate("/admin/users/all");
+          } catch (ex) {
+            setErr(ex.message);
+          }
+        }}
+      >
+        <div className="form-grid premium-grid">
+          <div className="field"><label>Username *</label><input required minLength={6} value={form.username} onChange={(e) => set("username", e.target.value)} /></div>
+          <div className="field"><label>Password *</label><input type="password" required minLength={6} value={form.password} onChange={(e) => set("password", e.target.value)} /></div>
+          <div className="field"><label>Email *</label><input type="email" required value={form.email} onChange={(e) => set("email", e.target.value)} /></div>
+          <div className="field"><label>Status</label>
+            <select value={form.status} onChange={(e) => set("status", e.target.value)}>
+              <option value="1">Active</option>
+              <option value="0">Inactive</option>
+            </select>
+          </div>
+          <div className="field"><label>Name</label><input value={form.name} onChange={(e) => set("name", e.target.value)} /></div>
+          <div className="field"><label>Firm Name *</label><input required value={form.firm_name} onChange={(e) => set("firm_name", e.target.value)} /></div>
+          <div className="field full"><label>Address *</label><input required value={form.address} onChange={(e) => set("address", e.target.value)} /></div>
+          <div className="field"><label>Contact Person *</label><input required value={form.contact_person} onChange={(e) => set("contact_person", e.target.value)} /></div>
+          <div className="field"><label>Contact No *</label><input required value={form.contact_no} onChange={(e) => set("contact_no", e.target.value)} /></div>
+          <div className="field"><label>Alternate Contact</label><input value={form.alternate_contact_no} onChange={(e) => set("alternate_contact_no", e.target.value)} /></div>
+          <div className="field"><label>GST No</label><input value={form.gst_no} onChange={(e) => set("gst_no", e.target.value)} /></div>
+          <div className="field"><label>PAN No</label><input value={form.pan_no} onChange={(e) => set("pan_no", e.target.value)} /></div>
+          <div className="field"><label>Validation</label>
+            <select value={form.validation_status} onChange={(e) => set("validation_status", e.target.value)}>
+              <option>Pending</option>
+              <option>Validated</option>
+              <option>Rejected</option>
+            </select>
+          </div>
+          <MultiFilePicker label="Documents" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png" files={docs} setFiles={setDocs} />
+          <MultiFilePicker label="Images" accept="image/*" files={images} setFiles={setImages} />
+        </div>
+        <div className="action-row">
+          <button className="btn btn-primary-soft" type="submit">Create vendor</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 export function VendorDetail() {
   const { id } = useParams();
   const navigate = useNavigate();

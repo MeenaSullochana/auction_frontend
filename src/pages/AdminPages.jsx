@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import { api, API_BASE } from "../api";
 import { applyTheme, DEFAULT_SITE, useSite } from "../site";
 
@@ -433,29 +433,51 @@ export function Users() {
   const { scope = "all" } = useParams();
   const [rows, setRows] = useState([]);
   const [search, setSearch] = useState("");
-  const load = () => api(`/admin/users/${scope}${search ? `?search=${encodeURIComponent(search)}` : ""}`, { auth: "admin" }).then((d) => setRows(d.users));
+  const load = () => api(`/admin/users/${scope}${search ? `?search=${encodeURIComponent(search)}` : ""}`, { auth: "admin" }).then((d) => setRows(d.users || []));
   useEffect(() => { load(); }, [scope]);
   return (
-    <div>
-      <div className="toolbar">
-        <h2>{scope} Users</h2>
-        <form onSubmit={(e) => { e.preventDefault(); load(); }}>
-          <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search" />
-        </form>
+    <div className="admin-page">
+      <div className="toolbar page-head">
+        <div>
+          <p className="eyebrow">Vendors</p>
+          <h2>{scope === "all" ? "All vendors" : `${scope} vendors`}</h2>
+        </div>
+        <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
+          <form onSubmit={(e) => { e.preventDefault(); load(); }} style={{ display: "flex", gap: 8 }}>
+            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search firm / email / mobile" />
+            <button className="btn soft-toggle" type="submit">Search</button>
+          </form>
+          <Link className="btn btn-gold" to="/admin/vendors/new">Add vendor</Link>
+        </div>
       </div>
       <div className="card table-wrap">
         <table>
-          <thead><tr><th>Username</th><th>Email</th><th>Mobile</th><th>Approve</th><th>Status</th></tr></thead>
+          <thead>
+            <tr>
+              <th>Unique ID</th>
+              <th>Firm</th>
+              <th>Contact</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Status</th>
+            </tr>
+          </thead>
           <tbody>
             {rows.map((u) => (
               <tr key={u.id}>
-                <td><Link className="link" to={`/admin/user/${u.id}`}>{u.username}</Link></td>
+                <td><Link className="link" to={`/admin/vendors/${u.id}`}>{u.unique_id || u.id}</Link></td>
+                <td>{u.firm_name || "-"}</td>
+                <td>{u.contact_person || `${u.firstname || ""} ${u.lastname || ""}`.trim() || "-"}</td>
+                <td>{u.username}</td>
                 <td>{u.email}</td>
-                <td>{u.mobile}</td>
-                <td>{u.approve ? "Yes" : "Pending"}</td>
-                <td>{u.status ? "Active" : "Banned"}</td>
+                <td>{u.contact_no || u.mobile || "-"}</td>
+                <td>{u.status ? "Active" : "Inactive"}</td>
               </tr>
             ))}
+            {!rows.length && (
+              <tr><td colSpan={7}><p className="empty-note">No vendors found.</p></td></tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -465,67 +487,42 @@ export function Users() {
 
 export function UserDetail() {
   const { id } = useParams();
-  const [data, setData] = useState(null);
-  const [msg, setMsg] = useState("");
-  useEffect(() => { api(`/admin/user/${id}`, { auth: "admin" }).then(setData); }, [id]);
-  if (!data) return <p>Loading...</p>;
-  const u = data.user;
-  return (
-    <div>
-      <h2>User detail</h2>
-      {msg && <div className="alert ok">{msg}</div>}
-      <form className="card" onSubmit={async (e) => {
-        e.preventDefault();
-        const fd = new FormData(e.target);
-        const body = Object.fromEntries(fd.entries());
-        body.approve = fd.get("approve") ? 1 : 0;
-        body.status = fd.get("status") ? 1 : 0;
-        const d = await api(`/admin/users/${id}`, { method: "PUT", body, auth: "admin" });
-        setMsg(d.message);
-      }}>
-        <div className="form-grid">
-          <div className="field"><label>Firstname</label><input name="firstname" defaultValue={u.firstname} required /></div>
-          <div className="field"><label>Lastname</label><input name="lastname" defaultValue={u.lastname} required /></div>
-          <div className="field"><label>Email</label><input name="email" defaultValue={u.email} required /></div>
-          <div className="field"><label>Mobile</label><input name="mobile" defaultValue={u.mobile} required /></div>
-          <div className="field"><label>Country</label><input name="country" defaultValue={u.country} required /></div>
-          <div className="field"><label>Address</label><input name="address" defaultValue={u.address} /></div>
-          <div className="field"><label>City</label><input name="city" defaultValue={u.city} /></div>
-          <div className="field"><label>State</label><input name="state" defaultValue={u.state} /></div>
-          <div className="field"><label>Zip</label><input name="zip" defaultValue={u.zip} /></div>
-          <div className="field"><label><input type="checkbox" name="approve" defaultChecked={!!u.approve} /> Approve</label></div>
-          <div className="field"><label><input type="checkbox" name="status" defaultChecked={!!u.status} /> Status</label></div>
-        </div>
-        <button className="btn btn-gold" style={{ marginTop: 16 }}>Update</button>
-      </form>
-      <h3>Assign to auctions</h3>
-      <div className="card">
-        {data.auctions.map((a) => {
-          const ids = JSON.parse(a.assign_user || "[]").map(Number);
-          const checked = ids.includes(Number(id));
-          return (
-            <label key={a.id} style={{ display: "block", marginBottom: 8 }}>
-              <input type="checkbox" defaultChecked={checked} onChange={async (e) => {
-                await api("/admin/auction-assign", { method: "POST", body: { user_id: Number(id), user_check: e.target.checked ? 1 : 0, auction_id: a.id }, auth: "admin" });
-              }} /> {a.name}
-            </label>
-          );
-        })}
-      </div>
-    </div>
-  );
+  return <Navigate to={`/admin/vendors/${id}`} replace />;
 }
 
 export function Contacts() {
   const [rows, setRows] = useState([]);
-  useEffect(() => { api("/admin/contacts", { auth: "admin" }).then((d) => setRows(d.contacts)); }, []);
+  useEffect(() => { api("/admin/contacts", { auth: "admin" }).then((d) => setRows(d.contacts || [])); }, []);
   return (
-    <div>
+    <div className="admin-page">
       <h2>Contact Enquiries</h2>
       <div className="card table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>Email</th><th>Subject</th><th>Message</th></tr></thead>
-          <tbody>{rows.map((c) => <tr key={c.id}><td>{c.name}</td><td>{c.email}</td><td>{c.subject}</td><td>{c.message}</td></tr>)}</tbody>
+          <thead>
+            <tr>
+              <th>Firm</th>
+              <th>Contact person</th>
+              <th>Contact no</th>
+              <th>Email</th>
+              <th>Address</th>
+              <th>Message</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((c) => (
+              <tr key={c.id}>
+                <td>{c.firm_name || "-"}</td>
+                <td>{c.contact_person || c.name || "-"}</td>
+                <td>{c.contact_no || "-"}</td>
+                <td>{c.email}</td>
+                <td>{c.address || "-"}</td>
+                <td>{c.message}</td>
+              </tr>
+            ))}
+            {!rows.length && (
+              <tr><td colSpan={6}><p className="empty-note">No enquiries yet.</p></td></tr>
+            )}
+          </tbody>
         </table>
       </div>
     </div>

@@ -8,7 +8,7 @@ import { AdminLogin, ForgotPassword, Login } from "./pages/AuthPages";
 import { AuctionProducts, ChangePassword, MultipleBid, ProductBid, UserDashboard, WatchList, WinningHistory } from "./pages/UserPages";
 import { AdminDash, BrandSettings, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
 import { Auctions, Reports } from "./pages/AdminAuctions";
-import { Companies, CompanyDetail, Sliders, VendorDetail, Vendors } from "./pages/AdminPartners";
+import { Companies, CompanyDetail, Sliders, VendorCreate, VendorDetail, Vendors } from "./pages/AdminPartners";
 
 function UserGate({ children }) {
   const { user, ready } = useAuth();
@@ -63,6 +63,7 @@ export default function App() {
         <Route path="products/:type" element={<Products />} />
         <Route path="winners" element={<Winners />} />
         <Route path="vendors" element={<Vendors />} />
+        <Route path="vendors/new" element={<VendorCreate />} />
         <Route path="vendors/:id" element={<VendorDetail />} />
         <Route path="companies" element={<Companies />} />
         <Route path="companies/:id" element={<CompanyDetail />} />
