@@ -1096,6 +1096,14 @@ th { color: var(--copper-2); font-weight: 700; }
     backdrop-filter: blur(16px);
     box-shadow: 0 16px 40px rgba(26,40,26,.1);
   }
+  .nav.open .drop-menu {
+    display: grid;
+    position: static;
+    box-shadow: none;
+    border: 0;
+    background: transparent;
+    padding: 4px 0 4px 12px;
+  }
   #menuBtn { display: inline-flex !important; grid-column: 2; }
   .split, .service-grid, .people, .stats-row, .contact-grid, .footer-grid { grid-template-columns: 1fr; }
   .contact-grid--trio { grid-template-columns: 1fr; }
@@ -1513,3 +1521,164 @@ th { color: var(--copper-2); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) {
   .auction-card, .auction-status.live { animation: none; }
 }
+
+.detail-photo {
+  width: min(100%, 520px);
+  max-height: 420px;
+  object-fit: cover;
+}
+.detail-split {
+  align-items: center;
+  gap: clamp(24px, 4vw, 48px);
+}
+
+/* Bidder room */
+.room-topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, #3d6a9a, #5a8ec0);
+  color: #fff;
+  font-weight: 650;
+}
+.room-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 28px;
+  padding: 16px 18px;
+  margin-bottom: 18px;
+  border-radius: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.room-meta-col {
+  display: grid;
+  gap: 8px;
+}
+.room-meta-col div {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 8px;
+  font-size: 13px;
+}
+.room-meta-col span { color: var(--muted); }
+.room-meta-col b { color: var(--cream); font-weight: 650; }
+.room-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.room-toolbar h3 { margin: 0; }
+.room-note { margin: 0 0 14px; font-size: 14px; }
+.room-items { display: grid; gap: 14px; }
+.room-item-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr .7fr;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.1);
+  background: rgba(255,255,255,.03);
+}
+.room-item-row.is-sold { opacity: .72; }
+.room-item-info { display: grid; gap: 10px; }
+.room-item-box {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(0,0,0,.25);
+  font-size: 13px;
+}
+.room-item-box .muted { color: var(--muted); font-size: 12px; }
+.room-bid-stack, .room-status-stack {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+.room-bid-head {
+  text-align: center;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(147, 196, 125, 0.16);
+  color: #d7ebcb;
+}
+.room-bid-chip, .room-bid-hint {
+  text-align: center;
+  font-size: 12px;
+  padding: 8px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.06);
+}
+.room-bid-hint { color: #c8efc0; font-weight: 600; }
+.room-bid-stack input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #0a0e0a;
+  color: #fff;
+}
+.room-submit { width: 100%; }
+.room-rank {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 700;
+  padding: 18px 10px;
+  border-radius: 10px;
+  background: rgba(90, 170, 110, 0.18);
+  color: #c8efc0;
+}
+.room-rank.sold {
+  background: rgba(200, 120, 80, 0.2);
+  color: #f0c9a8;
+}
+.room-add-others { margin-top: 18px; }
+.room-add-others select {
+  min-width: 240px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: #0a0e0a;
+  color: #fff;
+}
+.fav-btn {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: rgba(200, 200, 200, .7);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 4px;
+}
+.fav-btn.on, .fav-btn.large.on { color: #e6c35c; }
+.fav-btn.large {
+  margin-top: 14px;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--muted);
+}
+.item-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 900px) {
+  .room-meta { grid-template-columns: 1fr; }
+  .room-item-row { grid-template-columns: 1fr; }
+  .room-meta-col div { grid-template-columns: 120px 1fr; }
+}
+
+

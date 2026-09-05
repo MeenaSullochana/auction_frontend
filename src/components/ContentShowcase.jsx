@@ -11,35 +11,31 @@ export const SHOWCASE_SLIDES = [
     label: "Auction",
     title: "Open · Reverse · Sealed",
     text: "Three clear desks — rising bids, falling prices, or confidential closes.",
-    image:
-      "https://images.unsplash.com/photo-1560472355-536de3962603?auto=format&fit=crop&w=1800&q=80",
-    cta: { label: "View auctions", to: "/auction" },
+    image: "/media/hero-floor.jpg",
+    cta: { label: "Open auction", to: "/auctions/open" },
   },
   {
     id: "ewaste",
     label: "E-waste",
     title: "Clear e-waste the right way",
     text: "Safe collection, recycling and EPR support — value recovered, compliance kept.",
-    image:
-      "https://images.unsplash.com/photo-1550009158-9ebf29161c90?auto=format&fit=crop&w=1800&q=80",
-    cta: { label: "E-waste desks", to: "/disposal-auction" },
+    image: "/media/slide-ewaste.jpg",
+    cta: { label: "E-waste", to: "/services/e-waste" },
   },
   {
     id: "liquidation",
     label: "Liquidation",
     title: "Idle stock → working capital",
     text: "Excess and end-of-life inventory cleared through a transparent auction desk.",
-    image:
-      "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1800&q=80",
-    cta: { label: "Liquidation", to: "/disposal-auction" },
+    image: "/media/slide-liquidation.jpg",
+    cta: { label: "Liquidation", to: "/services/liquidation" },
   },
   {
     id: "mobile",
     label: "Mobile",
     title: "Mobile phones in bulk",
     text: "Handsets and parts — PCBs, screens, cameras, batteries — sold with a recorded close.",
-    image:
-      "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=1800&q=80",
+    image: "/media/slide-mobile.jpg",
     cta: { label: "Mobile lots", to: "/auction" },
   },
   {
@@ -47,8 +43,7 @@ export const SHOWCASE_SLIDES = [
     label: "Consumer Electronics",
     title: "Consumer electronics",
     text: "TVs, laptops, printers and routers — excess cleared cleanly for principals.",
-    image:
-      "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=1800&q=80",
+    image: "/media/slide-consumer.jpg",
     cta: { label: "Electronics", to: "/auction" },
   },
   {
@@ -56,8 +51,7 @@ export const SHOWCASE_SLIDES = [
     label: "Home Appliances",
     title: "Home appliances",
     text: "Washers, fridges, ACs and parts — bulk lots with a simple, fair clock.",
-    image:
-      "https://images.unsplash.com/photo-1556912173-46c336c7fd55?auto=format&fit=crop&w=1800&q=80",
+    image: "/media/slide-home.jpg",
     cta: { label: "Home Appliances", to: "/auction" },
   },
   {
@@ -65,8 +59,7 @@ export const SHOWCASE_SLIDES = [
     label: "Kitchen Appliances",
     title: "Kitchen & small appliances",
     text: "Mixers, kettles, microwaves and more — surplus moved in organised sales.",
-    image:
-      "https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1800&q=80",
+    image: "/media/slide-kitchen.jpg",
     cta: { label: "Kitchen lots", to: "/auction" },
   },
   {
@@ -74,8 +67,7 @@ export const SHOWCASE_SLIDES = [
     label: "Hardware & Electrical",
     title: "Hardware & electrical",
     text: "Cables, switches, lighting and tools — idle stores returned to market.",
-    image:
-      "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1800&q=80",
+    image: "/media/slide-hardware.jpg",
     cta: { label: "Hardware lots", to: "/auction" },
   },
   {
@@ -83,9 +75,8 @@ export const SHOWCASE_SLIDES = [
     label: "Auto Mobile",
     title: "Autos & spare parts",
     text: "Vehicles and components — fleets and workshops cleared at fair market value.",
-    image:
-      "https://images.unsplash.com/photo-1486262715619-67b85e0b08d3?auto=format&fit=crop&w=1800&q=80",
-    cta: { label: "Auto Mobile", to: "/disposal-auction" },
+    image: "/media/slide-auto.jpg",
+    cta: { label: "Auto Mobile", to: "/services/liquidation" },
   },
 ];
 

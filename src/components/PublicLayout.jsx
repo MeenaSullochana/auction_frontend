@@ -9,8 +9,11 @@ const MARQUEE_TAGS = [
   "Process scrap",
   "Unused stores",
   "Unclaimed cargo",
-  "Disposal auction",
-  "Procurement auction",
+  "E-waste",
+  "Liquidation",
+  "Open auction",
+  "Sealed auction",
+  "Reverse auction",
   "Transparent bid tape",
   "Approved vendors",
   "Chennai floor",
@@ -101,11 +104,18 @@ export default function PublicLayout() {
             <div className="drop">
               <span>Services</span>
               <div className="drop-menu">
-                <Link to="/disposal-auction" onClick={() => setOpen(false)}>Disposal auction</Link>
-                <Link to="/procurement-auction" onClick={() => setOpen(false)}>Procurement auction</Link>
+                <Link to="/services/e-waste" onClick={() => setOpen(false)}>E-waste</Link>
+                <Link to="/services/liquidation" onClick={() => setOpen(false)}>Liquidation</Link>
               </div>
             </div>
-            <NavLink to="/auction" onClick={() => setOpen(false)}>Auctions</NavLink>
+            <div className="drop">
+              <span>Auctions</span>
+              <div className="drop-menu">
+                <Link to="/auctions/open" onClick={() => setOpen(false)}>Open Auction</Link>
+                <Link to="/auctions/sealed" onClick={() => setOpen(false)}>Sealed Auction</Link>
+                <Link to="/auctions/reverse" onClick={() => setOpen(false)}>Reverse Auction</Link>
+              </div>
+            </div>
             <NavLink to="/contact" onClick={() => setOpen(false)}>Contact</NavLink>
           </nav>
           {user ? (
@@ -125,8 +135,14 @@ export default function PublicLayout() {
           <Logo to="/" size="lg" />
           <div>
             <strong>Sales</strong>
-            <Link to="/disposal-auction">Disposal</Link>
-            <Link to="/procurement-auction">Procurement</Link>
+            <Link to="/services/e-waste">E-waste</Link>
+            <Link to="/services/liquidation">Liquidation</Link>
+            <Link to="/auctions/open">Open auction</Link>
+          </div>
+          <div>
+            <strong>Auctions</strong>
+            <Link to="/auctions/sealed">Sealed</Link>
+            <Link to="/auctions/reverse">Reverse</Link>
             <Link to="/auction">Live lots</Link>
           </div>
           <div>

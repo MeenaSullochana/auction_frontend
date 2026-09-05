@@ -1,10 +1,130 @@
-import { Link } from "react-router-dom";
+import { Link, Navigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../api";
 import { useAuth } from "../auth";
 import Reveal from "../components/Reveal";
 import ContentShowcase from "../components/ContentShowcase";
 import AuctionScroll from "../components/AuctionScroll";
+
+const SERVICE_PAGES = {
+  "e-waste": {
+    chip: "Service",
+    title: "E-waste",
+    hero: "/media/slide-ewaste.jpg",
+    photo: "/media/slide-ewaste.jpg",
+    headline: "Clear e-waste the right way.",
+    lead:
+      "Safe collection, recycling and EPR support — value recovered from boards, handsets, appliances and IT assets while compliance stays on record.",
+    points: [
+      "Sorted lots with photos, codes and quantity notes",
+      "Approved vendor desks for recycling and recovery",
+      "Suitable for corporates, plants and surplus IT fleets",
+    ],
+    cta: { label: "See live lots", to: "/auction" },
+  },
+  liquidation: {
+    chip: "Service",
+    title: "Liquidation",
+    hero: "/media/slide-liquidation.jpg",
+    photo: "/media/slide-liquidation.jpg",
+    headline: "Idle stock → working capital.",
+    lead:
+      "Excess and end-of-life inventory cleared through a transparent auction desk — plant stores, consumer goods, vehicles and unfinished lots moved with a fair clock.",
+    points: [
+      "One seller, many buyers, rising competitive bids",
+      "Catalogues typed lot by lot or imported from Excel",
+      "Winner reports with amounts and bidder names",
+    ],
+    cta: { label: "Request a desk", to: "/contact" },
+  },
+};
+
+const AUCTION_TYPE_PAGES = {
+  open: {
+    chip: "Auction format",
+    title: "Open Auction",
+    hero: "/media/hero-floor.jpg",
+    photo: "/media/slide-machinery.jpg",
+    headline: "Prices start low and climb in the open.",
+    lead:
+      "Multiple buyers compete on a shared clock. Every raise is visible on the bid tape until the highest accepted bid closes the lot.",
+    points: [
+      "Transparent rising bids for disposal and liquidation",
+      "Live remaining time with anti-snipe extensions",
+      "Approved bidders only — pending accounts stay off the floor",
+    ],
+    cta: { label: "View live sales", to: "/auction" },
+  },
+  sealed: {
+    chip: "Auction format",
+    title: "Sealed Auction",
+    hero: "/media/slide-scrap.jpg",
+    photo: "/media/service-disposal.jpg",
+    headline: "Confidential bids until the desk opens the close.",
+    lead:
+      "Buyers submit sealed offers without seeing competing amounts. The house opens the close on schedule and awards against the accepted sealed price.",
+    points: [
+      "Useful when principals want quiet, competitive offers",
+      "No public bid ladder during the sale window",
+      "Results stay attached to the lot for collection",
+    ],
+    cta: { label: "Talk to the desk", to: "/contact" },
+  },
+  reverse: {
+    chip: "Auction format",
+    title: "Reverse Auction",
+    hero: "/media/service-procurement.jpg",
+    photo: "/media/slide-vehicles.jpg",
+    headline: "One buyer. Competing vendors. Falling prices.",
+    lead:
+      "You publish what you need — spares, packing, transport or stores — and qualified sellers bid down to win the order on a shared, recorded clock.",
+    points: [
+      "Vendor competition that purchasing teams can defend",
+      "Assign only approved users to a given sale",
+      "Ideal for recurring industrial supply",
+    ],
+    cta: { label: "Request reverse desk", to: "/contact" },
+  },
+};
+
+function DetailPage({ page }) {
+  if (!page) return <Navigate to="/" replace />;
+  return (
+    <div>
+      <div className="page-hero with-photo" style={{ backgroundImage: `url(${page.hero})` }}>
+        <div className="container">
+          <p className="chip chip-on-dark">{page.chip}</p>
+          <h1>{page.title}</h1>
+        </div>
+      </div>
+      <section className="section">
+        <Reveal className="container split detail-split">
+          <img className="round-photo detail-photo" src={page.photo} alt={page.title} />
+          <div>
+            <h2>{page.headline}</h2>
+            <p className="lead">{page.lead}</p>
+            <ul className="ticks">
+              {page.points.map((p) => (
+                <li key={p}>{p}</li>
+              ))}
+            </ul>
+            <Link className="btn btn-gold" to={page.cta.to}>{page.cta.label}</Link>
+          </div>
+        </Reveal>
+      </section>
+    </div>
+  );
+}
+
+export function ServiceDetail() {
+  const { slug } = useParams();
+  return <DetailPage page={SERVICE_PAGES[slug]} />;
+}
+
+export function AuctionTypeDetail() {
+  const { type } = useParams();
+  return <DetailPage page={AUCTION_TYPE_PAGES[type]} />;
+}
 
 export function Home() {
   return (
@@ -33,8 +153,8 @@ export function Home() {
             <Link className="btn btn-gold" to="/about">Read our story</Link>
           </div>
           <div className="photo-stack">
-            <img src="/media/service-disposal.jpg" alt="Disposal auction on a factory floor" />
-            <img src="/media/service-procurement.jpg" alt="Procurement auction with vendors" />
+            <img src="/media/slide-ewaste.jpg" alt="E-waste recovery lots" />
+            <img src="/media/slide-liquidation.jpg" alt="Liquidation catalogue" />
           </div>
         </Reveal>
       </section>
@@ -74,59 +194,11 @@ export function About() {
 }
 
 export function Disposal() {
-  return (
-    <div>
-      <div className="page-hero with-photo" style={{ backgroundImage: "url(/media/service-disposal.jpg)" }}>
-        <div className="container">
-          <p className="chip chip-on-dark">Service</p>
-          <h1>Disposal auction</h1>
-        </div>
-      </div>
-      <section className="section">
-        <Reveal className="container split">
-          <img className="round-photo" src="/media/slide-vehicles.jpg" alt="Vehicles listed for disposal" />
-          <div>
-            <h2>One seller. Many buyers. Rising prices.</h2>
-            <p className="lead">Use disposal when you need to clear a factory line, a vehicle fleet, scrap heaps or leftover stores. We publish the catalogue, collect approved bids and hand you a winner report with amounts and bidder names.</p>
-            <ul className="ticks">
-              <li>Seller keeps the right to accept or reject</li>
-              <li>Suitable for PSUs, private plants and cargo yards</li>
-              <li>Photos and condition notes sit on each product card</li>
-            </ul>
-            <Link className="btn btn-gold" to="/auction">See current sales</Link>
-          </div>
-        </Reveal>
-      </section>
-    </div>
-  );
+  return <Navigate to="/services/liquidation" replace />;
 }
 
 export function Procurement() {
-  return (
-    <div>
-      <div className="page-hero with-photo" style={{ backgroundImage: "url(/media/service-procurement.jpg)" }}>
-        <div className="container">
-          <p className="chip chip-on-dark">Service</p>
-          <h1>Procurement auction</h1>
-        </div>
-      </div>
-      <section className="section">
-        <Reveal className="container split">
-          <div>
-            <h2>One buyer. Competing vendors. Falling prices.</h2>
-            <p className="lead">Reverse the usual auction. You publish what you need — spares, packing, transport or stores — and qualified sellers bid down to win the order. The tape is visible, so purchasing teams can defend the final rate.</p>
-            <ul className="ticks">
-              <li>Vendor competition on a shared clock</li>
-              <li>Useful for recurring industrial supply</li>
-              <li>Assign only approved users to a given sale</li>
-            </ul>
-            <Link className="btn btn-gold" to="/contact">Request a procurement desk</Link>
-          </div>
-          <img className="round-photo" src="/media/slide-scrap.jpg" alt="Stores and spares for procurement" />
-        </Reveal>
-      </section>
-    </div>
-  );
+  return <Navigate to="/auctions/reverse" replace />;
 }
 
 export function AuctionPage() {

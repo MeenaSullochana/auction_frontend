@@ -3,9 +3,9 @@ import { useAuth } from "./auth";
 import PublicLayout from "./components/PublicLayout";
 import UserLayout from "./components/UserLayout";
 import AdminLayout from "./components/AdminLayout";
-import { About, AuctionPage, Contact, Disposal, Home, Procurement } from "./pages/PublicPages";
+import { About, AuctionPage, AuctionTypeDetail, Contact, Disposal, Home, Procurement, ServiceDetail } from "./pages/PublicPages";
 import { AdminLogin, ForgotPassword, Login } from "./pages/AuthPages";
-import { AuctionProducts, ChangePassword, MultipleBid, ProductBid, UserDashboard, WatchList, WinningHistory } from "./pages/UserPages";
+import { AuctionProducts, BidderRoom, ChangePassword, MultipleBid, ProductBid, UserDashboard, WatchList, WinningHistory } from "./pages/UserPages";
 import { AdminDash, BrandSettings, Contacts, ImportProducts, ProductBids, ProductForm, Products, UserDetail, Users, Winners } from "./pages/AdminPages";
 import { Auctions, Reports } from "./pages/AdminAuctions";
 import { Companies, CompanyDetail, Sliders, VendorCreate, VendorDetail, Vendors } from "./pages/AdminPartners";
@@ -32,6 +32,8 @@ export default function App() {
         <Route path="/about" element={<About />} />
         <Route path="/disposal-auction" element={<Disposal />} />
         <Route path="/procurement-auction" element={<Procurement />} />
+        <Route path="/services/:slug" element={<ServiceDetail />} />
+        <Route path="/auctions/:type" element={<AuctionTypeDetail />} />
         <Route path="/auction" element={<AuctionPage />} />
         <Route path="/contact" element={<Contact />} />
       </Route>
@@ -44,6 +46,7 @@ export default function App() {
         <Route path="winning-history" element={<WinningHistory />} />
         <Route path="change-password" element={<ChangePassword />} />
         <Route path="auction/:id" element={<AuctionProducts />} />
+        <Route path="auction/:id/room" element={<BidderRoom />} />
         <Route path="auction/:auctionId/multiple" element={<MultipleBid />} />
         <Route path="auction/:auctionId/watch" element={<WatchList />} />
         <Route path="product/:auctionId/:id" element={<ProductBid />} />
