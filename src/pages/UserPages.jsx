@@ -32,26 +32,50 @@ function Countdown({ date }) {
 
 export function UserDashboard() {
   const [auctions, setAuctions] = useState([]);
+  const [err, setErr] = useState("");
   useEffect(() => {
-    api("/user/dashboard", { auth: "user" }).then((d) => setAuctions(d.auctions || [])).catch(() => {});
+    api("/user/dashboard", { auth: "user" })
+      .then((d) => setAuctions(d.auctions || []))
+      .catch((e) => setErr(e.message || "Could not load auctions"));
   }, []);
   return (
-    <div>
-      <h2>Dashboard</h2>
+    <div className="bidder-page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Bidder desk</p>
+          <h2>My auctions</h2>
+          <p className="lead">Live and upcoming sales assigned to your vendor login.</p>
+        </div>
+      </div>
+      {err && <div className="alert err">{err}</div>}
       <div className="card table-wrap">
         <table>
-          <thead><tr><th>S.N.</th><th>Auction Name</th><th>Open Date Time</th><th>Close Date Time</th></tr></thead>
+          <thead>
+            <tr>
+              <th>S.N.</th>
+              <th>Auction</th>
+              <th>Unique ID</th>
+              <th>Status</th>
+              <th>Open</th>
+              <th>Close</th>
+            </tr>
+          </thead>
           <tbody>
             {auctions.map((a, i) => (
               <tr key={a.id}>
                 <td>{i + 1}</td>
                 <td><Link className="link" to={`/user/auction/${a.id}`}>{a.name}</Link></td>
+                <td>{a.unique_id || "-"}</td>
+                <td><span className={`status-pill ${a.phase || ""}`}>{a.phase_label || a.phase || "-"}</span></td>
                 <td>{fmt(a.started_at)}</td>
                 <td>{fmt(a.expired_at)}</td>
               </tr>
             ))}
           </tbody>
         </table>
+        {!auctions.length && !err && (
+          <p className="empty-note">No assigned live or upcoming auctions. Ask admin to assign your vendor to an auction.</p>
+        )}
       </div>
     </div>
   );
@@ -258,18 +282,24 @@ export function WinningHistory() {
     api("/user/winning-history", { auth: "user" }).then((d) => setRows(d.winningHistories || []));
   }, []);
   return (
-    <div>
-      <h2>My Winning History</h2>
+    <div className="bidder-page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Results</p>
+          <h2>My winning history</h2>
+          <p className="lead">Lots you won — amounts stay on your vendor record for collection.</p>
+        </div>
+      </div>
       <div className="card table-wrap">
         <table>
-          <thead><tr><th>Product</th><th>Code</th><th>Bid Amount</th></tr></thead>
+          <thead><tr><th>Product</th><th>Code</th><th>Bid Amount (INR)</th></tr></thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.id}><td>{r.product_name}</td><td>{r.product_code}</td><td>{r.bid_amount}</td></tr>
             ))}
           </tbody>
         </table>
-        {!rows.length && <p className="lead">No winning history found</p>}
+        {!rows.length && <p className="empty-note">No winning history found</p>}
       </div>
     </div>
   );

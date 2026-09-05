@@ -415,15 +415,38 @@ export function ProductBids() {
 
 export function Winners() {
   const [rows, setRows] = useState([]);
-  useEffect(() => { api("/admin/winners", { auth: "admin" }).then((d) => setRows(d.winners)); }, []);
+  useEffect(() => { api("/admin/winners", { auth: "admin" }).then((d) => setRows(d.winners || [])); }, []);
   return (
-    <div>
-      <h2>Winners</h2>
+    <div className="admin-page">
+      <div className="page-head">
+        <div>
+          <p className="eyebrow">Results</p>
+          <h2>Winners</h2>
+          <p className="lead">Highest bids locked per product after close.</p>
+        </div>
+      </div>
       <div className="card table-wrap">
         <table>
-          <thead><tr><th>Product</th><th>Code</th><th>User</th><th>Amount</th></tr></thead>
-          <tbody>{rows.map((w) => <tr key={w.id}><td>{w.product_name}</td><td>{w.code}</td><td>{w.username}</td><td>{w.amount}</td></tr>)}</tbody>
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Code</th>
+              <th>Vendor</th>
+              <th>Amount (INR)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((w) => (
+              <tr key={w.id}>
+                <td>{w.product_name}</td>
+                <td>{w.code}</td>
+                <td>{w.username}</td>
+                <td>{w.amount}</td>
+              </tr>
+            ))}
+          </tbody>
         </table>
+        {!rows.length && <p className="empty-note">No winners recorded yet.</p>}
       </div>
     </div>
   );

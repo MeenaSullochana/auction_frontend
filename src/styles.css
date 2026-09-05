@@ -736,6 +736,15 @@ a.contact-side-row:hover {
 .side {
   background: #000; border-right: 1px solid var(--line); padding: 22px 16px;
 }
+.bidder-side-meta { margin: 18px 0 4px; }
+.bidder-side-meta .eyebrow {
+  margin: 0 0 4px; font-size: 10px; letter-spacing: .12em;
+  text-transform: uppercase; color: rgba(168,184,164,.55);
+}
+.bidder-name {
+  margin: 0; font-size: 15px; font-weight: 650; color: #e8f2e2;
+}
+.bidder-page .page-head { margin-bottom: 16px; }
 .side nav { display: grid; gap: 6px; margin-top: 24px; }
 .side a, .side button.linkish {
   padding: 10px 12px; border-radius: 12px; color: var(--muted); text-align: left;
@@ -1034,6 +1043,22 @@ th { color: var(--copper-2); font-weight: 700; }
   display: inline-flex; padding: 3px 9px; border-radius: 999px;
   background: rgba(147, 196, 125, 0.1);
   color: rgba(207, 232, 194, 0.92); font-size: 11px; letter-spacing: .03em;
+}
+.status-pill.live, .status-pill.Live {
+  background: rgba(90, 170, 110, 0.22);
+  color: #c8efc0;
+}
+.status-pill.upcoming, .status-pill.Upcoming, .status-pill.Open {
+  background: rgba(120, 160, 210, 0.18);
+  color: #c5daf5;
+}
+.status-pill.completed, .status-pill.Completed {
+  background: rgba(160, 160, 160, 0.16);
+  color: rgba(220, 220, 220, 0.85);
+}
+.status-pill.Pending {
+  background: rgba(200, 160, 80, 0.16);
+  color: #f0d9a8;
 }
 .row-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .text-btn {

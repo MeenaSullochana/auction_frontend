@@ -281,7 +281,12 @@ export function VendorDetail() {
         </div>
         <div className="form-grid">
           {(data.auctions || []).map((a) => {
-            const ids = JSON.parse(a.assign_user || "[]").map(Number);
+            let ids = [];
+            try {
+              ids = JSON.parse(a.assign_user || "[]").map(Number);
+            } catch {
+              ids = [];
+            }
             const checked = ids.includes(Number(id));
             return (
               <label key={a.id} className="field" style={{ display: "flex", gap: 8, alignItems: "center" }}>

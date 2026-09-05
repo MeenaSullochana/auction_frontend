@@ -616,7 +616,7 @@ export function Auctions() {
                   <td>{a.division || "-"}</td>
                   <td>{fmt(a.started_at)}</td>
                   <td>{fmt(a.expired_at)}</td>
-                  <td><span className="status-pill">{a.status ? "Active" : "Pending"}</span></td>
+                  <td><span className={`status-pill ${(a.phase || "").toLowerCase()}`}>{a.phase || (a.status ? "Active" : "Pending")}</span></td>
                   <td className="row-actions">
                     <Link className="text-btn" to={`/admin/products/AuctionWise?auction_id=${a.id}`}>Products</Link>
                     <button type="button" className="text-btn" onClick={() => openListAction(a, "product")}>Quick add</button>

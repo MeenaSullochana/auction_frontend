@@ -6,14 +6,19 @@ export default function UserLayout() {
   const { user, logoutUser } = useAuth();
   const navigate = useNavigate();
   return (
-    <div className="dash">
+    <div className="dash bidder-dash">
       <aside className="side">
         <Logo to="/" size="sm" />
-        <p className="lead" style={{ marginTop: 18 }}>{user?.username}</p>
+        <div className="bidder-side-meta">
+          <p className="eyebrow">Vendor login</p>
+          <p className="bidder-name">{user?.firm_name || user?.username}</p>
+          <p className="lead">{user?.username}{user?.unique_id ? ` · ${user.unique_id}` : ""}</p>
+        </div>
         <nav>
-          <NavLink to="/user/dashboard">Dashboard</NavLink>
-          <NavLink to="/user/winning-history">Wining History</NavLink>
+          <NavLink to="/user/dashboard">My Auctions</NavLink>
+          <NavLink to="/user/winning-history">Winning History</NavLink>
           <NavLink to="/user/change-password">Change Password</NavLink>
+          <NavLink to="/contact">Contact Enquiry</NavLink>
           <button
             className="linkish"
             onClick={() => {
