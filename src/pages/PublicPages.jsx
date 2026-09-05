@@ -318,7 +318,7 @@ export function Contact() {
         </div>
       </div>
       <section className="section">
-        <Reveal className="container contact-grid contact-grid--trio">
+        <Reveal className="container contact-grid">
           <div className="contact-intro">
             <h2>Vendor enquiry</h2>
             <p className="lead">
@@ -326,69 +326,71 @@ export function Contact() {
             </p>
           </div>
 
-          <aside className="contact-side-card">
-            <h3>Chennai desk</h3>
-            <a className="contact-side-row" href="tel:+919841281212">
-              <span className="contact-side-icon" aria-hidden>
-                <i className="las la-phone" />
-              </span>
-              <span>
-                <small>Phone</small>
-                <strong>+91 98412 81212</strong>
-              </span>
-            </a>
-            <a className="contact-side-row" href="mailto:auction@gmail.com">
-              <span className="contact-side-icon" aria-hidden>
-                <i className="las la-envelope" />
-              </span>
-              <span>
-                <small>Email</small>
-                <strong>auction@gmail.com</strong>
-              </span>
-            </a>
-            <div className="contact-side-row">
-              <span className="contact-side-icon" aria-hidden>
-                <i className="las la-map-marker" />
-              </span>
-              <span>
-                <small>Location</small>
-                <strong>Chennai, Tamil Nadu</strong>
-              </span>
-            </div>
-          </aside>
+          <div className="contact-enquiry-stack">
+            <aside className="contact-side-card">
+              <h3>Chennai desk</h3>
+              <a className="contact-side-row" href="tel:+919841281212">
+                <span className="contact-side-icon" aria-hidden>
+                  <i className="las la-phone" />
+                </span>
+                <span>
+                  <small>Phone</small>
+                  <strong>+91 98412 81212</strong>
+                </span>
+              </a>
+              <a className="contact-side-row" href="mailto:auction@gmail.com">
+                <span className="contact-side-icon" aria-hidden>
+                  <i className="las la-envelope" />
+                </span>
+                <span>
+                  <small>Email</small>
+                  <strong>auction@gmail.com</strong>
+                </span>
+              </a>
+              <div className="contact-side-row">
+                <span className="contact-side-icon" aria-hidden>
+                  <i className="las la-map-marker" />
+                </span>
+                <span>
+                  <small>Location</small>
+                  <strong>Chennai, Tamil Nadu</strong>
+                </span>
+              </div>
+            </aside>
 
-          <form
-            className="card glass-form"
-            onSubmit={async (e) => {
-              e.preventDefault();
-              setMsg("");
-              setErr("");
-              try {
-                const data = await api("/public/contact", { method: "POST", body: form });
-                setMsg(data.message);
-                setForm(profileToEnquiry(user));
-              } catch (ex) {
-                setErr(ex.message || "Could not send enquiry");
-              }
-            }}
-          >
-            {user && (
-              <p className="lead" style={{ marginBottom: 12 }}>
-                Signed in as <strong>{user.username}</strong> — firm and contact fields are filled from your vendor profile.
-              </p>
-            )}
-            {msg && <div className="alert ok">{msg}</div>}
-            {err && <div className="alert err">{err}</div>}
-            <div className="form-grid">
-              <div className="field"><label>Firm Name</label><input name="firm_name" required value={form.firm_name} onChange={onChange} /></div>
-              <div className="field"><label>Contact Person</label><input name="contact_person" required value={form.contact_person} onChange={onChange} /></div>
-              <div className="field full"><label>Address</label><input name="address" required value={form.address} onChange={onChange} /></div>
-              <div className="field"><label>Contact No</label><input name="contact_no" required value={form.contact_no} onChange={onChange} /></div>
-              <div className="field"><label>Email</label><input name="email" type="email" required value={form.email} onChange={onChange} /></div>
-              <div className="field full"><label>Message (optional)</label><textarea name="message" rows="4" value={form.message} onChange={onChange} /></div>
-            </div>
-            <button className="btn btn-gold" style={{ marginTop: 16 }}>Send enquiry</button>
-          </form>
+            <form
+              className="card glass-form"
+              onSubmit={async (e) => {
+                e.preventDefault();
+                setMsg("");
+                setErr("");
+                try {
+                  const data = await api("/public/contact", { method: "POST", body: form });
+                  setMsg(data.message);
+                  setForm(profileToEnquiry(user));
+                } catch (ex) {
+                  setErr(ex.message || "Could not send enquiry");
+                }
+              }}
+            >
+              {user && (
+                <p className="lead" style={{ marginBottom: 12 }}>
+                  Signed in as <strong>{user.username}</strong> — firm and contact fields are filled from your vendor profile.
+                </p>
+              )}
+              {msg && <div className="alert ok">{msg}</div>}
+              {err && <div className="alert err">{err}</div>}
+              <div className="form-grid">
+                <div className="field"><label>Firm Name</label><input name="firm_name" required value={form.firm_name} onChange={onChange} /></div>
+                <div className="field"><label>Contact Person</label><input name="contact_person" required value={form.contact_person} onChange={onChange} /></div>
+                <div className="field full"><label>Address</label><input name="address" required value={form.address} onChange={onChange} /></div>
+                <div className="field"><label>Contact No</label><input name="contact_no" required value={form.contact_no} onChange={onChange} /></div>
+                <div className="field"><label>Email</label><input name="email" type="email" required value={form.email} onChange={onChange} /></div>
+                <div className="field full"><label>Message (optional)</label><textarea name="message" rows="4" value={form.message} onChange={onChange} /></div>
+              </div>
+              <button className="btn btn-gold" style={{ marginTop: 16 }}>Send enquiry</button>
+            </form>
+          </div>
         </Reveal>
       </section>
     </div>
